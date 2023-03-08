@@ -1,0 +1,295 @@
+##### Automation
+
+  - id: '1673856132095'
+    alias: Temp_control_winter
+    description: Control termostats - winter script
+    trigger:
+    - platform: device
+      device_id: d50626e193f0ec3ca722ba91dd6e0c56
+      domain: climate
+      entity_id: climate.01livingroom
+      type: current_temperature_changed
+      below: 21.3
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+    condition:
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: '{{state_attr(''climate.01LivingRoom'',''current_temperature'')<21.3}}'
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: input_text.temp_mode
+          state: Winter
+      - condition: state
+        entity_id: input_boolean.temperature_control
+        state: 'on'
+    action:
+    - service: climate.set_temperature
+      data:
+        temperature: 20.5
+      target:
+        device_id:
+        - 508f0752825298be21b447d88d13272b
+        - 167b58c4561fb0cd737b16befe0d5c3c
+    - service: climate.set_temperature
+      data:
+        temperature: 22.0
+      target:
+        device_id:
+        - 1ab2c4cd1555d64f4972dd5630fd3e44
+    - service: climate.set_temperature
+      data:
+        temperature: 28
+      target:
+        device_id:
+        - de10e707bb5513ec4affbf111dba0420
+        - 5ab68a20d179fbe297e7549a15f6efaa
+    - service: climate.set_temperature
+      data:
+        temperature: 27
+      target:
+        area_id:
+        - uffoyer
+    - service: climate.set_temperature
+      data:
+        temperature: 28
+      target:
+        device_id:
+        - d0601d0b80804614a73e4ba0a67821c2
+        area_id:
+        - ufkitchen
+        - uflivingroom
+    - service: climate.set_temperature
+      data:
+        temperature: 19
+      target:
+        device_id:
+        - d50626e193f0ec3ca722ba91dd6e0c56
+    - service: notify.notify
+      data:
+        message: 'Temp activated - Winter '
+    - service: input_text.set_value
+      data:
+        value: Winter
+      target:
+        entity_id: input_text.temp_mode
+    mode: single
+  - id: '1674488216169'
+    alias: Termostat_off_power_off
+    description: Control termostats - summer script
+    trigger:
+    - type: not_plugged_in
+      platform: device
+      device_id: df8f5923121f7ac7f59c52fdd1e5299d
+      entity_id: binary_sensor.0x00124b0029120cbc_contact
+      domain: binary_sensor
+    condition:
+    - condition: and
+      conditions:
+      - type: is_not_plugged_in
+        condition: device
+        device_id: df8f5923121f7ac7f59c52fdd1e5299d
+        entity_id: binary_sensor.0x00124b0029120cbc_contact
+        domain: binary_sensor
+      - condition: state
+        entity_id: input_boolean.power_grid_state_helper
+        state: 'on'
+    action:
+    - service: notify.notify
+      data:
+        message: Grid is OFF - Temperature is OFF
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.power_grid_state_helper
+    - service: script.grid_off_termo_off
+      data: {}
+    mode: single
+  - id: '1674596628955'
+    alias: Temp_control_spring
+    description: Control thermostats - sprint script
+    trigger:
+    - platform: device
+      device_id: d50626e193f0ec3ca722ba91dd6e0c56
+      domain: climate
+      entity_id: climate.01livingroom
+      type: current_temperature_changed
+      below: 22.2
+      above: 21.4
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+    condition:
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: '{{state_attr(''climate.01LivingRoom'',''current_temperature'')>21.4
+          and state_attr(''climate.01LivingRoom'',''current_temperature'')<22.2}}'
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: input_text.temp_mode
+          state: Spring
+      - condition: state
+        entity_id: input_boolean.temperature_control
+        state: 'on'
+    action:
+    - service: climate.set_temperature
+      data:
+        temperature: 20.5
+      target:
+        device_id:
+        - 508f0752825298be21b447d88d13272b
+        - 167b58c4561fb0cd737b16befe0d5c3c
+    - service: climate.set_temperature
+      data:
+        temperature: 22.0
+      target:
+        device_id:
+        - 1ab2c4cd1555d64f4972dd5630fd3e44
+    - service: climate.set_temperature
+      data:
+        temperature: 26
+      target:
+        device_id:
+        - de10e707bb5513ec4affbf111dba0420
+        - 5ab68a20d179fbe297e7549a15f6efaa
+    - service: climate.set_temperature
+      data:
+        temperature: 25
+      target:
+        area_id:
+        - uffoyer
+    - service: climate.set_temperature
+      data:
+        temperature: 25
+      target:
+        device_id:
+        - d0601d0b80804614a73e4ba0a67821c2
+        area_id:
+        - ufkitchen
+        - uflivingroom
+    - service: climate.set_temperature
+      data:
+        temperature: 19
+      target:
+        device_id:
+        - d50626e193f0ec3ca722ba91dd6e0c56
+    - service: notify.notify
+      data:
+        message: Temp activated - Spring
+    - service: input_text.set_value
+      data:
+        value: Spring
+      target:
+        entity_id: input_text.temp_mode
+    mode: single
+  - id: '1674714034511'
+    alias: Termostat_off_power_on
+    description: Control termostats - power on
+    trigger:
+    - type: plugged_in
+      platform: device
+      device_id: df8f5923121f7ac7f59c52fdd1e5299d
+      entity_id: binary_sensor.0x00124b0029120cbc_contact
+      domain: binary_sensor
+    condition:
+    - condition: and
+      conditions:
+      - type: is_plugged_in
+        condition: device
+        device_id: df8f5923121f7ac7f59c52fdd1e5299d
+        entity_id: binary_sensor.0x00124b0029120cbc_contact
+        domain: binary_sensor
+      - condition: state
+        entity_id: input_boolean.power_grid_state_helper
+        state: 'off'
+    action:
+    - service: notify.notify
+      data:
+        message: Grid is ON- Temperature is ON in 10 min
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.power_grid_state_helper
+    - service: script.grid_on_termo_on
+      data: {}
+    mode: single
+  - id: '1675332030863'
+    alias: Temp_control_summer
+    description: Control thermostats - summer script
+    trigger:
+    - platform: device
+      device_id: d50626e193f0ec3ca722ba91dd6e0c56
+      domain: climate
+      entity_id: climate.01livingroom
+      type: current_temperature_changed
+      above: 22.3
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+    condition:
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: '{{state_attr(''climate.01LivingRoom'',''current_temperature'')>22.3}}'
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: input_text.temp_mode
+          state: Summer
+      - condition: state
+        entity_id: input_boolean.temperature_control
+        state: 'on'
+    action:
+    - service: climate.set_temperature
+      data:
+        temperature: 15
+      target:
+        device_id:
+        - 508f0752825298be21b447d88d13272b
+        - 1ab2c4cd1555d64f4972dd5630fd3e44
+        - 167b58c4561fb0cd737b16befe0d5c3c
+    - service: climate.set_temperature
+      data:
+        temperature: 12
+      target:
+        device_id:
+        - de10e707bb5513ec4affbf111dba0420
+        - 5ab68a20d179fbe297e7549a15f6efaa
+    - service: climate.set_temperature
+      data:
+        temperature: 12
+      target:
+        area_id:
+        - uffoyer
+    - service: climate.set_temperature
+      data:
+        temperature: 15
+      target:
+        device_id:
+        - d0601d0b80804614a73e4ba0a67821c2
+        area_id:
+        - ufkitchen
+        - uflivingroom
+    - service: climate.set_temperature
+      data:
+        temperature: 14
+      target:
+        device_id:
+        - d50626e193f0ec3ca722ba91dd6e0c56
+    - service: notify.notify
+      data:
+        message: Temp activated - Summer
+    - service: input_text.set_value
+      data:
+        value: Summer
+      target:
+        entity_id: input_text.temp_mode
+    mode: single

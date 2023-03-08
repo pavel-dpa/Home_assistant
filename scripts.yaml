@@ -1,0 +1,105 @@
+hw_10min:
+  alias: HW_10min
+  sequence:
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: b44aef36117010d2561a502afa0b11d9
+    entity_id: switch.tasmota_7
+    domain: switch
+  mode: single
+  icon: mdi:coolant-temperature
+hw_30min:
+  alias: HW_30min
+  sequence:
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: b44aef36117010d2561a502afa0b11d9
+    entity_id: switch.tasmota_7
+    domain: switch
+  mode: single
+  icon: mdi:coolant-temperature
+heater_30min:
+  alias: HEATER_60min
+  sequence:
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: f1b30d175e381f45016091fcde18af32
+    entity_id: switch.tasmota_4
+    domain: switch
+  mode: single
+  icon: mdi:coolant-temperature
+heater_30min_2:
+  alias: HEATER_30min
+  sequence:
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: f1b30d175e381f45016091fcde18af32
+    entity_id: switch.tasmota_4
+    domain: switch
+  mode: single
+  icon: mdi:coolant-temperature
+grid_off_termo_off:
+  alias: GRID_OFF_Termo_off
+  sequence:
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: 'off'
+    target:
+      entity_id:
+      - climate.01guestroom
+      - climate.01livingroom
+      - climate.02bedroom
+      - climate.02childrenroom
+      - climate.uf01bathroom
+      - climate.uf02bathroom
+      - climate.uffoyer
+      - climate.ufhallway
+      - climate.ufkitchen
+      - climate.uflivingroom
+  mode: single
+  icon: mdi:home-thermometer-outline
+grid_on_termo_on:
+  alias: GRID_on_Termo_on
+  sequence:
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+    enabled: true
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: heat
+    target:
+      entity_id:
+      - climate.01guestroom
+      - climate.01livingroom
+      - climate.02bedroom
+      - climate.02childrenroom
+      - climate.uf01bathroom
+      - climate.uf02bathroom
+      - climate.uffoyer
+      - climate.ufhallway
+      - climate.ufkitchen
+      - climate.uflivingroom
+  - service: notify.notify
+    data:
+      message: Termo is on
+  mode: single
+  icon: mdi:home-thermometer

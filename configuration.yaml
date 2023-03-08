@@ -1,0 +1,75 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+
+#lovelace:
+#  mode: yaml
+#  resources:
+#    - url: /local/mini-graph-card-bundle.js?v=0.11.0
+#    - url: /config/www/community/mini-graph-card/mini-graph-card-bundle.js
+#      type: module
+
+#    - url: /hacsfiles/better-thermostat-ui-card/better-thermostat-ui-card.js
+#      type: module
+# resources:
+#  - url: /local/apexcharts-card.js?v=2.0.2
+#    type: module
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+sensor: !include sensors.yaml
+
+
+###############################
+######MANAUL###################
+http:
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+
+
+
+
+recorder:
+  purge_keep_days: 20
+  commit_interval: 30
+  
+####alert: !include alerts.yaml
+
+
+notify:
+  - name: admin_mobile
+    platform: group
+    services:
+      - service: mobile_app_21091116ag
+
+##### Water control
+## leaks
+## HW heater
+
+
+##### Temp control automations
+automation mine: !include temp_control_automation.yaml
+## automation script: !include temp_control_scripts.yaml
+## add helpers
+
+
+
+
+###### irrigations part
+## add automation
+## add helpers
+homeassistant:
+  packages: 
+    irrigation_pack: !include irrigation_pack.yaml
+
+
