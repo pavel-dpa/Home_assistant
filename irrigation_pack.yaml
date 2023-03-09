@@ -177,19 +177,19 @@ irrigation_unlimited:
 
 
 
-                
+
 
 
 sensor:
 ### LEGACY PART - to DELETE ####################
-  - platform: average
-    name: irrigation_unlimited_rain_0
-    entities:
-      - sensor.openweathermap_forecast_precipitation
-    precision: 2
-    start: "{{ now().replace(hour=0).replace(minute=30).replace(second=0) }}"
-    end: "{{ now() }}"
-    scan_interval: 600
+#  - platform: average
+#    name: irrigation_unlimited_rain_0
+#    entities:
+#      - sensor.openweathermap_forecast_precipitation
+#    precision: 2
+#    start: "{{ now().replace(hour=0).replace(minute=30).replace(second=0) }}"
+#    end: "{{ now() }}"
+#    scan_interval: 600
   
   - platform: average
     name: irrigation_unlimited_rain_1
@@ -201,18 +201,18 @@ sensor:
     scan_interval: 600
 
 
-  - platform: template
-    sensors:
-      irrigation_unlimited_rain_today_24:
-        unit_of_measurement: 'mm'
-        value_template:  "{{ float(states('sensor.irrigation_unlimited_rain_0'),0)* 24}}"
-  
+#  - platform: template
+#    sensors:
+#      irrigation_unlimited_rain_today_24:
+#        unit_of_measurement: 'mm'
+#        value_template:  "{{ float(states('sensor.irrigation_unlimited_rain_0'),0)* 24}}"
+#  
   - platform: template
     sensors:
       irrigation_unlimited_rain_yesterday_24:
         unit_of_measurement: 'mm'
         value_template:  "{{ float(states('sensor.irrigation_unlimited_rain_1'),0) * 24}}"
-###########################################################
+
 
 
 
@@ -284,9 +284,10 @@ sensor:
           {% endif %}
           {{ (IUC_val) }}
 
-#### levels of rain
+### levels of rain
 ### today - 10 mm - irrigation is off / adjusted
 ### yesterday and tomorrow  - 20 mm - irrigation is off/ adjusted
+### less than 20% - do not irrigate
   - platform: template
     sensors:
       irrigation_unlimited_rain_ajastment:
@@ -296,4 +297,10 @@ sensor:
           {% set rain_n = float(states('sensor.irrigation_unlimited_rain_today'), 0) /10 %}
           {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /20 %}
           {% set rain_adj = float((1 - (rain_y+rain_n+rain_t)), 0)*100 %}
-          {{100 if rain_adj <0 else float(rain_adj,0) }}
+          {% if rain_adj < 0 %}
+          {% set rain_adj = 100  | int %}
+          {% endif %}
+          {% if rain_adj < 20 %}
+          {% set rain_adj = 0  | int %}
+          {% endif %}
+          {{float(rain_adj,0)}}
