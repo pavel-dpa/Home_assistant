@@ -223,7 +223,7 @@ sensor:
         value_template: >
           {% set temp_max_forecast_0 =float((state_attr('weather.home', 'forecast')[0].temperature),0) %}
           {% set temp_max_forecast_1 =float((state_attr('weather.home', 'forecast')[1].temperature),0) %}
-          {% if now().hour in [0, 1, 2, 3, 4] %}
+          {% if now().hour in [0, 1, 2, 3] %}
           {% set Ret_val =  temp_max_forecast_1 %}
           {% else %}
           {% set Ret_val =  temp_max_forecast_0 %}
@@ -239,7 +239,7 @@ sensor:
         value_template: >
           {% set rain_today_0 =float((state_attr('weather.home', 'forecast')[0].precipitation),0) %}
           {% set rain_today_1 =float((state_attr('weather.home', 'forecast')[1].precipitation),0) %}
-          {% if now().hour in [0, 1, 2, 3, 4] %}
+          {% if now().hour in [0, 1, 2, 3] %}
           {% set Ret_val_today =  rain_today_1 %}
           {% else %}
           {% set Ret_val_today =  rain_today_0 %}
@@ -254,7 +254,7 @@ sensor:
         value_template: >
           {% set rain_tom_1 =float((state_attr('weather.home', 'forecast')[1].precipitation),0) %}
           {% set rain_tom_2 =float((state_attr('weather.home', 'forecast')[2].precipitation),0) %}
-          {% if now().hour in [0, 1, 2, 3, 4] %}
+          {% if now().hour in [0, 1, 2, 3] %}
           {% set Ret_val_tomorrow =  rain_tom_2 %}
           {% else %}
           {% set Ret_val_tomorrow =  rain_tom_1 %}
@@ -298,9 +298,9 @@ sensor:
           {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /20 %}
           {% set rain_adj = float((1 - (rain_y+rain_n+rain_t)), 0)*100 %}
           {% if rain_adj < 0 %}
-          {% set rain_adj = 100  | int %}
+          {% set rain_adj = 0  | int %}
           {% endif %}
-          {% if rain_adj < 20 %}
+          {% if rain_adj < 25 %}
           {% set rain_adj = 0  | int %}
           {% endif %}
           {{float(rain_adj,0)}}
