@@ -193,9 +193,9 @@
   description: Midnight and noon - minus one for counters
   trigger:
   - platform: time
-    at: 00:05:00
+    at: 00:10:00
   - platform: time
-    at: '12:05:00'
+    at: '12:10:00'
   condition:
   - condition: and
     conditions:

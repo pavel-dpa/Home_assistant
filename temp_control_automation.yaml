@@ -87,6 +87,10 @@
       device_id: df8f5923121f7ac7f59c52fdd1e5299d
       entity_id: binary_sensor.0x00124b0029120cbc_contact
       domain: binary_sensor
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
     condition:
     - condition: and
       conditions:
@@ -198,6 +202,10 @@
       device_id: df8f5923121f7ac7f59c52fdd1e5299d
       entity_id: binary_sensor.0x00124b0029120cbc_contact
       domain: binary_sensor
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
     condition:
     - condition: and
       conditions:
