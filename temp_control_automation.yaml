@@ -14,6 +14,9 @@
         hours: 0
         minutes: 10
         seconds: 0
+##### additional check each 4 hours in case tracking temp has an issue        
+    - platform: time_pattern
+      hours: /4
     condition:
     - condition: and
       conditions:
@@ -128,6 +131,9 @@
         hours: 0
         minutes: 10
         seconds: 0
+##### additional check each 4 hours in case tracking temp has an issue        
+    - platform: time_pattern
+      hours: /4
     condition:
     - condition: and
       conditions:
@@ -242,6 +248,9 @@
         hours: 0
         minutes: 10
         seconds: 0
+##### additional check each 4 hours in case tracking temp has an issue        
+    - platform: time_pattern
+      hours: /4
     condition:
     - condition: and
       conditions:

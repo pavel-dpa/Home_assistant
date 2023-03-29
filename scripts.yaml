@@ -7,8 +7,8 @@ hw_10min:
       seconds: 0
       milliseconds: 0
   - type: turn_off
-    device_id: b44aef36117010d2561a502afa0b11d9
-    entity_id: switch.tasmota_7
+    device_id: 2af4ef0f2bcda9a25e0f0bbf7ea493d2
+    entity_id: switch.sonoff_10016da541
     domain: switch
   mode: single
   icon: mdi:coolant-temperature
@@ -21,8 +21,8 @@ hw_30min:
       seconds: 0
       milliseconds: 0
   - type: turn_off
-    device_id: b44aef36117010d2561a502afa0b11d9
-    entity_id: switch.tasmota_7
+    device_id: 2af4ef0f2bcda9a25e0f0bbf7ea493d2
+    entity_id: switch.sonoff_10016da541
     domain: switch
   mode: single
   icon: mdi:coolant-temperature
@@ -35,8 +35,8 @@ heater_30min:
       seconds: 0
       milliseconds: 0
   - type: turn_off
-    device_id: f1b30d175e381f45016091fcde18af32
-    entity_id: switch.tasmota_4
+    device_id: f8732ae9421f44b2c7b16ac361c10352
+    entity_id: switch.sonoff_10016d6085
     domain: switch
   mode: single
   icon: mdi:coolant-temperature
@@ -49,8 +49,8 @@ heater_30min_2:
       seconds: 0
       milliseconds: 0
   - type: turn_off
-    device_id: f1b30d175e381f45016091fcde18af32
-    entity_id: switch.tasmota_4
+    device_id: f8732ae9421f44b2c7b16ac361c10352
+    entity_id: switch.sonoff_10016d6085
     domain: switch
   mode: single
   icon: mdi:coolant-temperature

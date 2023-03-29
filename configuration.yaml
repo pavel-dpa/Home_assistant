@@ -32,6 +32,7 @@ sensor: !include sensors.yaml
 
 ###############################
 ######MANAUL###################
+###duckdns
 http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem

@@ -15,13 +15,13 @@
       state: 'off'
     - condition: device
       type: is_off
-      device_id: b44aef36117010d2561a502afa0b11d9
-      entity_id: switch.tasmota_7
+      device_id: 2af4ef0f2bcda9a25e0f0bbf7ea493d2
+      entity_id: switch.sonoff_10016da541
       domain: switch
   action:
   - type: turn_on
-    device_id: b44aef36117010d2561a502afa0b11d9
-    entity_id: switch.tasmota_7
+    device_id: 2af4ef0f2bcda9a25e0f0bbf7ea493d2
+    entity_id: switch.sonoff_10016da541
     domain: switch
   - service: notify.notify
     data:
@@ -77,8 +77,12 @@
   condition: []
   action:
   - type: turn_off
+    device_id: a6bf65abd239c30e7543eb30f291cfa2
+    entity_id: switch.0xa4c1381766502901_left
+    domain: switch
+  - type: turn_off
     device_id: e0a8e8d356f5a6dfdf554f9e46c34dbf
-    entity_id: switch.0x804b50fffeb34c85
+    entity_id: switch.main_water
     domain: switch
   - type: turn_off
     device_id: 3080b9c89d9692d225fefa392b50bd23
@@ -113,8 +117,8 @@
     target:
       entity_id: input_boolean.hw_night_heater
   - type: turn_off
-    device_id: b44aef36117010d2561a502afa0b11d9
-    entity_id: switch.tasmota_7
+    device_id: 2af4ef0f2bcda9a25e0f0bbf7ea493d2
+    entity_id: switch.sonoff_10016da541
     domain: switch
   - service: notify.notify
     data:
@@ -163,8 +167,7 @@
     - sensor.irrigation_unlimited_counter
   condition:
   - condition: template
-    value_template: '{{states(''sensor.irrigation_unlimited_counter'') | int !=  states(''input_number.irrigation_counter_check'')
-      | int}}'
+    value_template: '{{int(states(''sensor.irrigation_unlimited_counter''),0) !=  int(states(''input_number.irrigation_counter_check''),0)}}'
   action:
   - service: input_number.set_value
     target:
@@ -175,7 +178,8 @@
         }}"
   - if:
     - condition: template
-      value_template: '{{ states(''input_number.irrigation_counter'') | int  < 1 }}'
+      value_template: '{{ int(states(''input_number.irrigation_counter'') ,0) < 1
+        }}'
     then:
     - service: input_number.set_value
       data:
@@ -186,7 +190,7 @@
     target:
       entity_id: input_number.irrigation_counter_check
     data:
-      value: '{{ states(''sensor.irrigation_unlimited_counter'') | int }}'
+      value: '{{ int(states(''sensor.irrigation_unlimited_counter''),0) }}'
   mode: single
 - id: '1677230846021'
   alias: irrigation_unlimited_count_down
@@ -267,10 +271,13 @@
       entity_id: input_boolean.irrigation_state
       state: 'on'
     - condition: template
-      value_template: '{{ states(''input_number.irrigation_counter'')|int == 1}}'
+      value_template: '{{ int(states(''input_number.irrigation_counter''),0) == 1}}'
     - condition: template
-      value_template: '{{ states(''sensor.irrigation_unlimited_temp_max_today'')|int
-        > 15}}'
+      value_template: '{{ int(states(''sensor.irrigation_unlimited_temp_max_today''),0)>
+        15}}'
+    - condition: template
+      value_template: '{{ int(states(''sensor.irrigation_unlimited_rain_ajastment''),0)>
+        0}}'
   action:
   - if:
     - condition: time
