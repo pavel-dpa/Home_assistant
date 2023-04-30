@@ -31,19 +31,20 @@
         entity_id: input_boolean.temperature_control
         state: 'on'
     action:
-    - service: climate.set_temperature
-      data:
-        temperature: 20.5
-      target:
-        device_id:
-        - 508f0752825298be21b447d88d13272b
-        - 167b58c4561fb0cd737b16befe0d5c3c
-    - service: climate.set_temperature
-      data:
-        temperature: 22.0
-      target:
-        device_id:
-        - 1ab2c4cd1555d64f4972dd5630fd3e44
+## room termostats implmented separatly
+##    - service: climate.set_temperature
+##      data:
+##        temperature: 20.5
+##      target:
+##        device_id:
+##        - 508f0752825298be21b447d88d13272b
+##        - 167b58c4561fb0cd737b16befe0d5c3c
+##    - service: climate.set_temperature
+##      data:
+##        temperature: 22.0
+##      target:
+##        device_id:
+##        - 1ab2c4cd1555d64f4972dd5630fd3e44
     - service: climate.set_temperature
       data:
         temperature: 28
@@ -149,19 +150,20 @@
         entity_id: input_boolean.temperature_control
         state: 'on'
     action:
-    - service: climate.set_temperature
-      data:
-        temperature: 20.5
-      target:
-        device_id:
-        - 508f0752825298be21b447d88d13272b
-        - 167b58c4561fb0cd737b16befe0d5c3c
-    - service: climate.set_temperature
-      data:
-        temperature: 22.0
-      target:
-        device_id:
-        - 1ab2c4cd1555d64f4972dd5630fd3e44
+## room termostats implmented separatly
+##    - service: climate.set_temperature
+##      data:
+##        temperature: 20.5
+##      target:
+##        device_id:
+##        - 508f0752825298be21b447d88d13272b
+##        - 167b58c4561fb0cd737b16befe0d5c3c
+##    - service: climate.set_temperature
+##      data:
+##        temperature: 22.0
+##      target:
+##        device_id:
+##        - 1ab2c4cd1555d64f4972dd5630fd3e44
     - service: climate.set_temperature
       data:
         temperature: 26
@@ -265,14 +267,15 @@
         entity_id: input_boolean.temperature_control
         state: 'on'
     action:
-    - service: climate.set_temperature
-      data:
-        temperature: 15
-      target:
-        device_id:
-        - 508f0752825298be21b447d88d13272b
-        - 1ab2c4cd1555d64f4972dd5630fd3e44
-        - 167b58c4561fb0cd737b16befe0d5c3c
+## room termostats implmented separatly
+##    - service: climate.set_temperature
+##      data:
+##        temperature: 15
+##      target:
+##        device_id:
+##       - 508f0752825298be21b447d88d13272b
+##        - 1ab2c4cd1555d64f4972dd5630fd3e44
+##        - 167b58c4561fb0cd737b16befe0d5c3c
     - service: climate.set_temperature
       data:
         temperature: 12
