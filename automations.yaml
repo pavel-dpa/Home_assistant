@@ -210,20 +210,28 @@
       entity_id: input_boolean.irrigation_state
       state: 'on'
   action:
-  - service: input_number.set_value
-    data:
-      value: '{{ states(''input_number.irrigation_counter'') | int - 1 }}'
-    target:
-      entity_id: input_number.irrigation_counter
   - if:
     - condition: template
-      value_template: '{{ states(''input_number.irrigation_counter'')|int < 1 }}'
+      value_template: '{{ int(states(''input_number.irrigation_counter''),0) == 1
+        }}'
     then:
     - service: input_number.set_value
       data:
         value: '{{ states(''input_number.irrigation_counter_check'')|int }}'
       target:
         entity_id: input_number.irrigation_counter
+    else:
+    - service: input_number.set_value
+      data:
+        value: '{{ int(states(''input_number.irrigation_counter''),0) - 1 }}'
+      target:
+        entity_id: input_number.irrigation_counter
+  - service: input_number.set_value
+    data:
+      value: '{{ int(states(''input_number.irrigation_counter''),0) - 1 }}'
+    target:
+      entity_id: input_number.irrigation_counter
+    enabled: false
   mode: single
 - id: '1677245580092'
   alias: irrigation_unlimited_finish
