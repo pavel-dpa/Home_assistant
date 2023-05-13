@@ -165,6 +165,10 @@
   - platform: state
     entity_id:
     - sensor.irrigation_unlimited_counter
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
   condition:
   - condition: template
     value_template: '{{int(states(''sensor.irrigation_unlimited_counter''),0) !=  int(states(''input_number.irrigation_counter_check''),0)}}'
@@ -217,7 +221,7 @@
     then:
     - service: input_number.set_value
       data:
-        value: '{{ states(''input_number.irrigation_counter_check'')|int }}'
+        value: '{{ int(states(''input_number.irrigation_counter_check''),0)}}'
       target:
         entity_id: input_number.irrigation_counter
     else:
@@ -388,4 +392,60 @@
           }}'
       target:
         entity_id: climate.02bedroom
+  mode: single
+- id: '1683318245786'
+  alias: 'irrigation_unlimited_adjustment '
+  description: Adjast enabled irrigation
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.irrigation_unlimited_rain_ajastment
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  - platform: state
+    entity_id:
+    - sensor.irrigation_unlimited_temp_max_today
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+    enabled: false
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.irrigation_state
+      state: 'on'
+    - condition: or
+      conditions:
+      - condition: template
+        value_template: '{{ int(states(''binary_sensor.irrigation_unlimited_c1_m''),0)>
+          0}}'
+      - condition: template
+        value_template: '{{ int(states(''binary_sensor.irrigation_unlimited_c2_m''),0)>
+          0}}'
+  action:
+  - if:
+    - condition: template
+      value_template: '{{ int(states(''binary_sensor.irrigation_unlimited_c1_m''),0)>
+        0}}'
+    then:
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c1_m
+        percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+          float(-2) %}  {{ (rain_adj) }}
+
+          '
+    else:
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+        percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+          float(-2) %}  {{ (rain_adj) }}
+
+          '
+    enabled: true
   mode: single

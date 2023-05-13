@@ -21,7 +21,7 @@ irrigation_unlimited:
         - name: "Front yard"
           entity_id: "switch.tasmota2_1"
         - name: "Wattering  Bushes"
-          entity_id: "switch.tasmota2_2"
+          entity_id: "switch.tasmota2_2"        
         - name: "Back yard terass"
           entity_id: "switch.tasmota2_3"
         - name: "Back yard"
@@ -47,18 +47,18 @@ irrigation_unlimited:
             - zone_id: 2
               duration: "00:05"
               #repeat: 2
-            - zone_id: 3
-              duration: "00:05"
+            - zone_id: [3,4,6]
+              duration: "00:10"
               #repeat: 3
-            - zone_id: 4
-              duration: "00:05"
-              #repeat: 3
+##            - zone_id: 4
+##              duration: "00:07"
+##              #repeat: 3
             - zone_id: 5
               duration: "00:07"
               #repeat: 2
-            - zone_id: 6
-              duration: "00:05"
-              #repeat: 2
+##            - zone_id: 6
+##              duration: "00:05"
+##              #repeat: 2
             - zone_id: 7
               duration: "00:10"
               #repeat: 2
@@ -72,18 +72,18 @@ irrigation_unlimited:
             - zone_id: 2
               duration: "00:05"
               #repeat: 2
-            - zone_id: 3
-              duration: "00:05"
+            - zone_id: [3, 4, 6]
+              duration: "00:10"
               #repeat: 3
-            - zone_id: 4
-              duration: "00:05"
-              #repeat: 3              
+##            - zone_id: 4
+##              duration: "00:07"
+##              #repeat: 3              
             - zone_id: 5
               duration: "00:07"
               #repeat: 2
-            - zone_id: 6
-              duration: "00:05"
-              #repeat: 2
+##            - zone_id: 6
+##              duration: "00:05"
+##              #repeat: 2
             - zone_id: 7
               duration: "00:10"
               #repeat: 2
@@ -91,12 +91,12 @@ irrigation_unlimited:
               duration: "00:14"
               #repeat: 3
             # Session 3
-            - zone_id: 3
-              duration: "00:05"
+            - zone_id: [3 ,4, 6]
+              duration: "00:10"
               #repeat: 3
-            - zone_id: 4
-              duration: "00:05"
-              #repeat: 3            
+##            - zone_id: 4
+##              duration: "00:07"
+##              #repeat: 3            
             - zone_id: 8
               duration: "00:14"
               #repeat: 3
@@ -145,18 +145,18 @@ irrigation_unlimited:
             - zone_id: 2
               duration: "00:05"
               #repeat: 2
-            - zone_id: 3
-              duration: "00:05"
+            - zone_id: [3,4,6]
+              duration: "00:10"
               #repeat: 3
-            - zone_id: 4
-              duration: "00:05"
-              #repeat: 3
+##            - zone_id: 4
+##              duration: "00:07"
+##              #repeat: 3
             - zone_id: 5
               duration: "00:07"
               #repeat: 2
-            - zone_id: 6
-              duration: "00:05"
-              #repeat: 2
+##            - zone_id: 6
+##              duration: "00:05"
+##              #repeat: 2
             - zone_id: 7
               duration: "00:10"
               #repeat: 2
@@ -170,18 +170,18 @@ irrigation_unlimited:
             - zone_id: 2
               duration: "00:05"
               #repeat: 2
-            - zone_id: 3
-              duration: "00:05"
+            - zone_id: [3, 4, 6]
+              duration: "00:10"
               #repeat: 3
-            - zone_id: 4
-              duration: "00:05"
-              #repeat: 3              
+##            - zone_id: 4
+##              duration: "00:07"
+##              #repeat: 3              
             - zone_id: 5
               duration: "00:07"
               #repeat: 2
-            - zone_id: 6
-              duration: "00:05"
-              #repeat: 2
+##            - zone_id: 6
+##              duration: "00:05"
+##              #repeat: 2
             - zone_id: 7
               duration: "00:10"
               #repeat: 2
@@ -189,15 +189,47 @@ irrigation_unlimited:
               duration: "00:14"
               #repeat: 3
             # Session 3
-            - zone_id: 3
-              duration: "00:05"
+            - zone_id: [3 ,4, 6]
+              duration: "00:10"
               #repeat: 3
-            - zone_id: 4
-              duration: "00:05"
-              #repeat: 3            
+##            - zone_id: 4
+##              duration: "00:07"
+##              #repeat: 3            
             - zone_id: 8
               duration: "00:14"
               #repeat: 3
+    - name: "Water_drop"
+      enabled: true
+      entity_id: "switch.tasmota3_1" # main valve
+      all_zones_config: # <= Add these three lines <─┐
+        show: # <= to the configuration            <─┤
+          timeline: true # <= for all zones        <─┘
+      preamble: "00:01"
+      zones:
+        #- zone_id: 1
+        - name: "Wattering Trees"
+          entity_id: "switch.tasmota1_1"
+        - name: "Wattering Trees & Bushes"
+          entity_id: "switch.tasmota1_4"
+        - name: "Wattering  Bushes"
+          entity_id: "switch.tasmota2_2"        
+      sequences:
+        - name: "Sequences_water_drop"
+          delay: "00:01"
+          enabled: true
+          #  repeat: 2
+          schedules:
+            #- time: "05:00" #- for 5 AM
+            time:
+                sun: "sunset"
+                before: "00:10"
+            anchor: finish              
+            day:
+                every_n_days: 2
+                start_n_days: 2023-05-13 # Starting date + 1                  
+          zones:
+            - zone_id: [1,2,3]
+              duration: "01:00"
 
 sensor:
   ### LEGACY PART - to DELETE ####################
@@ -303,6 +335,7 @@ sensor:
   ### today - 10 mm - irrigation is off / adjusted
   ### yesterday and tomorrow  - 20 mm - irrigation is off/ adjusted
   ### less than 20% - do not irrigate
+  ### temp less than 15 - do not irrigate
   - platform: template
     sensors:
       irrigation_unlimited_rain_ajastment:
@@ -311,7 +344,13 @@ sensor:
           {% set rain_y = float(states('sensor.irrigation_unlimited_rain_yesterday_24'), 0) /20 %}
           {% set rain_n = float(states('sensor.irrigation_unlimited_rain_today'), 0) /10 %}
           {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /20 %}
-          {% set rain_adj = float((1 - (rain_y+rain_n+rain_t)), 0)*100 %}
+          {% set temp_max =states('sensor.irrigation_unlimited_temp_max_today') | float(-2) %}
+          {% if temp_max < 15 %}
+          {% set temp_adj = 0  | int %}
+          {% else %}
+          {% set temp_adj =  1 | int  %}
+          {% endif %}
+          {% set rain_adj = float((1 - (rain_y+rain_n+rain_t))*temp_adj, 0)*100 %}
           {% if rain_adj < 0 %}
           {% set rain_adj = 0  | int %}
           {% endif %}
