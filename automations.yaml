@@ -180,16 +180,28 @@
       value: "{{ (states('sensor.irrigation_unlimited_counter') | float(0))  +\n    (states('input_number.irrigation_counter')
         | float(0))  -\n  (states('input_number.irrigation_counter_check') | float(0))
         }}"
+    enabled: false
   - if:
     - condition: template
-      value_template: '{{ int(states(''input_number.irrigation_counter'') ,0) < 1
-        }}'
+      value_template: "{{  (states('sensor.irrigation_unlimited_counter') | float(0))
+        \ +\n        (states('input_number.irrigation_counter') | float(0))  -\n      (states('input_number.irrigation_counter_check')
+        | float(0)) < 1 }}"
     then:
     - service: input_number.set_value
       data:
-        value: 2
+        value: 1
       target:
         entity_id: input_number.irrigation_counter
+      enabled: true
+    else:
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.irrigation_counter
+      data:
+        value: "{{ (states('sensor.irrigation_unlimited_counter') | float(0))  +\n
+          \   (states('input_number.irrigation_counter') | float(0))  -\n  (states('input_number.irrigation_counter_check')
+          | float(0)) }}"
+    enabled: true
   - service: input_number.set_value
     target:
       entity_id: input_number.irrigation_counter_check
@@ -243,6 +255,9 @@
   trigger:
   - platform: event
     event_type: irrigation_unlimited_finish
+  - platform: state
+    entity_id:
+    - input_button.irrigation_cancel
   condition: []
   action:
   - service: irrigation_unlimited.disable
@@ -402,36 +417,136 @@
     - sensor.irrigation_unlimited_rain_ajastment
     for:
       hours: 0
-      minutes: 15
+      minutes: 20
       seconds: 0
-  - platform: state
-    entity_id:
-    - sensor.irrigation_unlimited_temp_max_today
-    for:
-      hours: 0
-      minutes: 15
-      seconds: 0
-    enabled: false
   condition:
   - condition: and
     conditions:
     - condition: state
       entity_id: input_boolean.irrigation_state
       state: 'on'
-    - condition: or
-      conditions:
-      - condition: template
-        value_template: '{{ int(states(''binary_sensor.irrigation_unlimited_c1_m''),0)>
-          0}}'
-      - condition: template
-        value_template: '{{ int(states(''binary_sensor.irrigation_unlimited_c2_m''),0)>
-          0}}'
   action:
   - if:
     - condition: template
-      value_template: '{{ int(states(''binary_sensor.irrigation_unlimited_c1_m''),0)>
-        0}}'
+      value_template: '{{float(states(''sensor.irrigation_unlimited_rain_ajastment'',0))==0}}'
+      alias: Disable everything as rain
     then:
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c1_m
+    else:
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+        percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+          float(-2) %}  {{ (rain_adj) }}
+
+          '
+    - if:
+      - condition: template
+        value_template: "{{ float(states('input_number.irrigation_counter_check'),0)
+          == 1 }}\t\t"
+      then:
+      - choose:
+        - conditions:
+          - condition: time
+            after: 00:01:00
+            before: '12:01:00'
+          sequence:
+          - service: irrigation_unlimited.enable
+            data:
+              entity_id: binary_sensor.irrigation_unlimited_c1_m
+          - service: irrigation_unlimited.adjust_time
+            data:
+              entity_id: binary_sensor.irrigation_unlimited_c1_m
+              percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+                float(-2) %}  {{ (rain_adj) }}
+
+                '
+        - conditions:
+          - condition: time
+            after: '12:01:00'
+            before: 00:01:00
+          sequence:
+          - service: irrigation_unlimited.enable
+            data:
+              entity_id: binary_sensor.irrigation_unlimited_c2_m
+          - service: irrigation_unlimited.adjust_time
+            data:
+              entity_id: binary_sensor.irrigation_unlimited_c2_m
+              percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+                float(-2) %}  {{ (rain_adj) }}
+
+                '
+      alias: Enable irrigation with conditions
+  mode: single
+- id: '1683988415783'
+  alias: irrigation_water_drop
+  description: enable\disable watering drop irrigation
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.irrigation_state
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition: []
+  action:
+  - if:
+    - condition: template
+      value_template: '{{ states(''input_boolean.irrigation_state'')== ''on''}}'
+    then:
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+    else:
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+    enabled: true
+  mode: single
+- id: '1685019185477'
+  alias: irrigation_unlimited_today
+  description: enable irrigation
+  trigger:
+  - platform: state
+    entity_id:
+    - input_button.irrigation_today
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.irrigation_state
+      state: 'on'
+    - condition: template
+      value_template: '{{ int(states(''input_number.irrigation_counter''),0) == 1}}'
+      enabled: false
+    - condition: template
+      value_template: '{{ float(states(''sensor.irrigation_unlimited_temp_max_today''),0)>
+        15}}'
+    - condition: template
+      value_template: '{{ int(states(''sensor.irrigation_unlimited_rain_ajastment''),0)>
+        0}}'
+      enabled: false
+  action:
+  - if:
+    - condition: time
+      after: 00:01:00
+      before: '12:01:00'
+    then:
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c1_m
     - service: irrigation_unlimited.adjust_time
       data:
         entity_id: binary_sensor.irrigation_unlimited_c1_m
@@ -439,7 +554,15 @@
           float(-2) %}  {{ (rain_adj) }}
 
           '
+      enabled: false
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c1_m
+        percentage: 100
     else:
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
     - service: irrigation_unlimited.adjust_time
       data:
         entity_id: binary_sensor.irrigation_unlimited_c2_m
@@ -447,5 +570,9 @@
           float(-2) %}  {{ (rain_adj) }}
 
           '
-    enabled: true
+      enabled: false
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+        percentage: 100
   mode: single

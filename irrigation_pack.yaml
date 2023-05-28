@@ -10,21 +10,21 @@ irrigation_unlimited:
       preamble: "00:01"
       zones:
         #- zone_id: 1
-        - name: "Right lawn"
+        - name: "Watering_right1"
           entity_id: "switch.tasmota1_3"
-        - name: "Right Garadge"
+        - name: "Watering_right2"
           entity_id: "switch.tasmota1_2"
-        - name: "Wattering Trees"
+        - name: "Watering_drop_fruts"
           entity_id: "switch.tasmota1_1"
-        - name: "Wattering Trees & Bushes"
+        - name: "Watering_drop_back"
           entity_id: "switch.tasmota1_4"
-        - name: "Front yard"
+        - name: "Watering_front"
           entity_id: "switch.tasmota2_1"
-        - name: "Wattering  Bushes"
-          entity_id: "switch.tasmota2_2"        
-        - name: "Back yard terass"
+        - name: "Watering_drop_left"
+          entity_id: "switch.tasmota2_2"
+        - name: "Watering_back1"
           entity_id: "switch.tasmota2_3"
-        - name: "Back yard"
+        - name: "Watering_back2"
           entity_id: "switch.tasmota2_4"
       sequences:
         - name: "Sequences_morning"
@@ -45,23 +45,23 @@ irrigation_unlimited:
               duration: "00:07"
               #repeat: 2
             - zone_id: 2
-              duration: "00:05"
-              #repeat: 2
-            - zone_id: [3,4,6]
-              duration: "00:10"
-              #repeat: 3
-##            - zone_id: 4
-##              duration: "00:07"
-##              #repeat: 3
-            - zone_id: 5
               duration: "00:07"
               #repeat: 2
-##            - zone_id: 6
-##              duration: "00:05"
-##              #repeat: 2
-            - zone_id: 7
+            ##            - zone_id: [3,6]
+            ##              duration: "00:10"
+            #repeat: 2
+            ##            - zone_id: 4
+            ##              duration: "00:10"
+            #repeat: 3
+            - zone_id: 5
               duration: "00:10"
               #repeat: 2
+            ##            - zone_id: 6
+            ##              duration: "00:05"
+            ##              #repeat: 2
+            - zone_id: 7
+              duration: "00:10"
+              #repeat: 3
             - zone_id: 8
               duration: "00:14"
               #repeat: 3
@@ -70,35 +70,35 @@ irrigation_unlimited:
               duration: "00:07"
               #repeat: 2
             - zone_id: 2
-              duration: "00:05"
-              #repeat: 2
-            - zone_id: [3, 4, 6]
-              duration: "00:10"
-              #repeat: 3
-##            - zone_id: 4
-##              duration: "00:07"
-##              #repeat: 3              
-            - zone_id: 5
               duration: "00:07"
               #repeat: 2
-##            - zone_id: 6
-##              duration: "00:05"
-##              #repeat: 2
-            - zone_id: 7
+            ##            - zone_id: [3, 6]
+            ##              duration: "00:10"
+            #repeat: 2
+            ##            - zone_id: 4
+            ##              duration: "00:10"
+            #repeat: 3
+            - zone_id: 5
               duration: "00:10"
               #repeat: 2
+            ##            - zone_id: 6
+            ##              duration: "00:05"
+            ##              #repeat: 2
+            - zone_id: 7
+              duration: "00:10"
+              #repeat: 3
             - zone_id: 8
               duration: "00:14"
               #repeat: 3
             # Session 3
-            - zone_id: [3 ,4, 6]
-              duration: "00:10"
-              #repeat: 3
-##            - zone_id: 4
-##              duration: "00:07"
-##              #repeat: 3            
+            ##            - zone_id: 4
+            ##              duration: "00:07"
+            ##              #repeat: 3
             - zone_id: 8
               duration: "00:14"
+              #repeat: 3
+            - zone_id: 7
+              duration: "00:10"
               #repeat: 3
     - name: "Evening_set"
       enabled: false
@@ -109,21 +109,21 @@ irrigation_unlimited:
       preamble: "00:01"
       zones:
         #- zone_id: 1
-        - name: "Right lawn"
+        - name: "Watering_right1"
           entity_id: "switch.tasmota1_3"
-        - name: "Right Garadge"
+        - name: "Watering_right2"
           entity_id: "switch.tasmota1_2"
-        - name: "Wattering Trees"
+        - name: "Watering_drop_fruts"
           entity_id: "switch.tasmota1_1"
-        - name: "Wattering Trees & Bushes"
+        - name: "Watering_drop_back"
           entity_id: "switch.tasmota1_4"
-        - name: "Front yard"
+        - name: "Watering_front"
           entity_id: "switch.tasmota2_1"
-        - name: "Wattering  Bushes"
+        - name: "Watering_drop_left"
           entity_id: "switch.tasmota2_2"
-        - name: "Back yard terass"
+        - name: "Watering_back1"
           entity_id: "switch.tasmota2_3"
-        - name: "Back yard"
+        - name: "Watering_back2"
           entity_id: "switch.tasmota2_4"
       sequences:
         - name: "Sequences_morning"
@@ -143,23 +143,23 @@ irrigation_unlimited:
               duration: "00:07"
               #repeat: 2
             - zone_id: 2
-              duration: "00:05"
-              #repeat: 2
-            - zone_id: [3,4,6]
-              duration: "00:10"
-              #repeat: 3
-##            - zone_id: 4
-##              duration: "00:07"
-##              #repeat: 3
-            - zone_id: 5
               duration: "00:07"
               #repeat: 2
-##            - zone_id: 6
-##              duration: "00:05"
-##              #repeat: 2
-            - zone_id: 7
+            ##            - zone_id: [3,6]
+            ##              duration: "00:10"
+            #repeat: 2
+            ##            - zone_id: 4
+            ##              duration: "00:10"
+            #repeat: 3
+            - zone_id: 5
               duration: "00:10"
               #repeat: 2
+            ##            - zone_id: 6
+            ##              duration: "00:05"
+            ##              #repeat: 2
+            - zone_id: 7
+              duration: "00:10"
+              #repeat: 3
             - zone_id: 8
               duration: "00:14"
               #repeat: 3
@@ -168,35 +168,35 @@ irrigation_unlimited:
               duration: "00:07"
               #repeat: 2
             - zone_id: 2
-              duration: "00:05"
-              #repeat: 2
-            - zone_id: [3, 4, 6]
-              duration: "00:10"
-              #repeat: 3
-##            - zone_id: 4
-##              duration: "00:07"
-##              #repeat: 3              
-            - zone_id: 5
               duration: "00:07"
               #repeat: 2
-##            - zone_id: 6
-##              duration: "00:05"
-##              #repeat: 2
-            - zone_id: 7
+            ##            - zone_id: [3, 6]
+            ##              duration: "00:10"
+            ##              #repeat: 2
+            ##            - zone_id: 4
+            ##              duration: "00:10"
+            #repeat: 3
+            - zone_id: 5
               duration: "00:10"
               #repeat: 2
+            ##            - zone_id: 6
+            ##              duration: "00:05"
+            ##              #repeat: 2
+            - zone_id: 7
+              duration: "00:10"
+              #repeat: 3
             - zone_id: 8
               duration: "00:14"
               #repeat: 3
             # Session 3
-            - zone_id: [3 ,4, 6]
-              duration: "00:10"
-              #repeat: 3
-##            - zone_id: 4
-##              duration: "00:07"
-##              #repeat: 3            
+            ##            - zone_id: 4
+            ##              duration: "00:07"
+            ##              #repeat: 3
             - zone_id: 8
               duration: "00:14"
+              #repeat: 3
+            - zone_id: 7
+              duration: "00:10"
               #repeat: 3
     - name: "Water_drop"
       enabled: true
@@ -212,7 +212,7 @@ irrigation_unlimited:
         - name: "Wattering Trees & Bushes"
           entity_id: "switch.tasmota1_4"
         - name: "Wattering  Bushes"
-          entity_id: "switch.tasmota2_2"        
+          entity_id: "switch.tasmota2_2"
       sequences:
         - name: "Sequences_water_drop"
           delay: "00:01"
@@ -221,15 +221,19 @@ irrigation_unlimited:
           schedules:
             #- time: "05:00" #- for 5 AM
             time:
-                sun: "sunset"
-                before: "00:10"
-            anchor: finish              
+              sun: "sunset"
+              before: "00:10"
+            anchor: finish
             day:
-                every_n_days: 2
-                start_n_days: 2023-05-13 # Starting date + 1                  
+              every_n_days: 1
+              start_n_days: 2023-05-13 # Starting date + 1
           zones:
-            - zone_id: [1,2,3]
-              duration: "01:00"
+            - zone_id: [1]
+              duration: "00:20"
+            - zone_id: 2
+              duration: "00:20"
+            - zone_id: 3
+              duration: "00:20"
 
 sensor:
   ### LEGACY PART - to DELETE ####################

@@ -114,8 +114,13 @@
       data: {}
       target:
         entity_id: input_boolean.power_grid_state_helper
-    - service: script.grid_off_termo_off
-      data: {}
+    - if:
+        - condition: state
+          entity_id: input_boolean.temperature_control
+          state: "on"
+      then:
+        - service: script.grid_off_termo_off
+          data: {}
     mode: single
   - id: '1674596628955'
     alias: Temp_control_spring
@@ -233,8 +238,13 @@
       data: {}
       target:
         entity_id: input_boolean.power_grid_state_helper
-    - service: script.grid_on_termo_on
-      data: {}
+    - if:
+        - condition: state
+          entity_id: input_boolean.temperature_control
+          state: "on"
+      then:
+        - service: script.grid_on_termo_on
+          data: {}
     mode: single
   - id: '1675332030863'
     alias: Temp_control_summer
