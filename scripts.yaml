@@ -104,3 +104,178 @@ grid_on_termo_on:
       message: Termo is on
   mode: single
   icon: mdi:home-thermometer
+new_script:
+  alias: Irrigation_on&adjust
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{float(states(''sensor.irrigation_unlimited_rain_ajastment'',0))==0}}'
+    then:
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c1_m
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c4_m
+      enabled: false
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+      enabled: false
+    else:
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+        percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+          float(-2) %}  {{ (rain_adj) }}
+
+          '
+    - if:
+      - condition: template
+        value_template: '{{ float(states(''sensor.irrigation_unlimited_temp_max_today''),0)>=
+          30}}'
+      then:
+      - service: irrigation_unlimited.enable
+        data:
+          entity_id: binary_sensor.irrigation_unlimited_c1_m
+      - service: irrigation_unlimited.adjust_time
+        data:
+          entity_id: binary_sensor.irrigation_unlimited_c1_m
+          percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+            float(-2) %}  {{ (rain_adj) }}
+
+            '
+      else:
+      - service: irrigation_unlimited.disable
+        data:
+          entity_id: binary_sensor.irrigation_unlimited_c1_m
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c4_m
+      enabled: false
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+      enabled: false
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c4_m
+        percentage: '{% set rain_adj = float(states(''sensor.irrigation_unlimited_rain_ajastment''),0)
+          %}  {{ (rain_adj) }}
+
+          '
+      enabled: false
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+        percentage: '{% set rain_adj = float(states(''sensor.irrigation_unlimited_rain_ajastment''),0)
+          %}  {{ (rain_adj) }}
+
+          '
+      enabled: false
+  icon: mdi:sprinkler
+  mode: single
+'1689573585540':
+  alias: Irrigation_off_drops
+  sequence:
+  - service: irrigation_unlimited.disable
+    data:
+      entity_id: binary_sensor.irrigation_unlimited_c3_m
+  - service: irrigation_unlimited.disable
+    data:
+      entity_id: binary_sensor.irrigation_unlimited_c4_m
+  icon: mdi:sprinkler
+  mode: single
+irrigation_off:
+  alias: Irrigation_off
+  sequence:
+  - service: irrigation_unlimited.disable
+    data:
+      entity_id: binary_sensor.irrigation_unlimited_c1_m
+  - service: irrigation_unlimited.disable
+    data:
+      entity_id: binary_sensor.irrigation_unlimited_c2_m
+  icon: mdi:sprinkler
+  mode: single
+irrigation_on_and_adjust_drops:
+  alias: Irrigation_on&adjust_drops
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{float(states(''sensor.irrigation_unlimited_rain_ajastment'',0))==0}}'
+    then:
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c4_m
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+      enabled: false
+    - service: irrigation_unlimited.disable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c1_m
+      enabled: false
+    else:
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c3_m
+        percentage: '{% set rain_adj = float(states(''sensor.irrigation_unlimited_rain_ajastment''),0)
+          %}  {{ (rain_adj) }}
+
+          '
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c4_m
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c4_m
+        percentage: '{% set rain_adj = float(states(''sensor.irrigation_unlimited_rain_ajastment''),0)
+          %}  {{ (rain_adj) }}
+
+          '
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+      enabled: false
+    - service: irrigation_unlimited.adjust_time
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c2_m
+        percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+          float(-2) %}  {{ (rain_adj) }}
+
+          '
+      enabled: false
+    - if:
+      - condition: template
+        value_template: '{{ float(states(''sensor.irrigation_unlimited_temp_max_today''),0)>=
+          30}}'
+      then:
+      - service: irrigation_unlimited.enable
+        data:
+          entity_id: binary_sensor.irrigation_unlimited_c1_m
+      - service: irrigation_unlimited.adjust_time
+        data:
+          entity_id: binary_sensor.irrigation_unlimited_c1_m
+          percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
+            float(-2) %}  {{ (rain_adj) }}
+
+            '
+      else:
+      - service: irrigation_unlimited.disable
+        data:
+          entity_id: binary_sensor.irrigation_unlimited_c1_m
+      enabled: false
+  icon: mdi:sprinkler
+  mode: single
