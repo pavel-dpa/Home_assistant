@@ -245,15 +245,22 @@
       hours: 0
       minutes: 20
       seconds: 0
-  condition:
-  - condition: and
-    conditions:
+  condition: []
+  action:
+  - if:
     - condition: state
       entity_id: input_boolean.irrigation_state
       state: 'on'
-  action:
-  - service: script.new_script
-    data: {}
+    then:
+    - service: script.new_script
+      data: {}
+  - if:
+    - condition: state
+      entity_id: input_boolean.irrigation_state_drop
+      state: 'on'
+    then:
+    - service: script.irrigation_on_and_adjust_drops
+      data: {}
   mode: single
 - id: '1685019185477'
   alias: irrigation_unlimited_today
@@ -497,7 +504,7 @@
   trigger:
   - platform: state
     entity_id:
-    - input_button.irrigation_state_drop
+    - input_boolean.irrigation_state_drop
     for:
       hours: 0
       minutes: 1
@@ -506,28 +513,12 @@
   action:
   - if:
     - condition: state
-      entity_id: input_boolean.irrigation_state
+      entity_id: input_boolean.irrigation_state_drop
       state: 'off'
     then:
     - service: script.1689573585540
       data: {}
-    - service: irrigation_unlimited.disable
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c1_m
-      enabled: false
     else:
     - service: script.irrigation_on_and_adjust_drops
       data: {}
-    - service: irrigation_unlimited.enable
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c4_m
-      enabled: false
-    - service: irrigation_unlimited.adjust_time
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c3_m
-        percentage: '{% set rain_adj = float(states(''sensor.irrigation_unlimited_rain_ajastment_drop''),0)
-          %}  {{ (rain_adj) }}
-
-          '
-      enabled: false
   mode: single
