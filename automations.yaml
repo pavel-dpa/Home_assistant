@@ -124,41 +124,6 @@
     data:
       message: HW night is off
   mode: single
-- id: '1677245580092'
-  alias: irrigation_unlimited_cancel
-  description: Cancel irrigation
-  trigger:
-  - platform: state
-    entity_id:
-    - input_button.irrigation_cancel
-  condition: []
-  action:
-  - service: irrigation_unlimited.disable
-    data:
-      entity_id: binary_sensor.irrigation_unlimited_c1_m
-    enabled: true
-  - service: irrigation_unlimited.disable
-    data:
-      entity_id: binary_sensor.irrigation_unlimited_c2_m
-    enabled: true
-  - service: notify.admin_mobile
-    data:
-      message: 'Time: {{ as_local(trigger.event.time_fired).strftime(''%c'') }}
-
-        Controller: {{ trigger.event.data.controller.index + 1 }} {{ trigger.event.data.controller.name
-        }}
-
-        Sequence: {{ trigger.event.data.sequence.index + 1 }} {{ trigger.event.data.sequence.name
-        }}
-
-        Schedule: {% if trigger.event.data.schedule.index is integer %}{{ trigger.event.data.schedule.index
-        + 1 }} {{ trigger.event.data.schedule.name }}{% else %} Manual {% endif %}
-
-        Duration: {{ timedelta(seconds=trigger.event.data.run.duration) }} irrigation
-        done
-
-        '
-  mode: single
 - id: '1681721042877'
   alias: temp_control_rooms
   description: Control temperature of thermostats in rooms depend on outside temp
@@ -261,67 +226,6 @@
     then:
     - service: script.irrigation_on_and_adjust_drops
       data: {}
-  mode: single
-- id: '1685019185477'
-  alias: irrigation_unlimited_today
-  description: enable irrigation
-  trigger:
-  - platform: state
-    entity_id:
-    - input_button.irrigation_today
-  condition:
-  - condition: and
-    conditions:
-    - condition: state
-      entity_id: input_boolean.irrigation_state
-      state: 'on'
-    - condition: template
-      value_template: '{{ int(states(''input_number.irrigation_counter''),0) == 1}}'
-      enabled: false
-    - condition: template
-      value_template: '{{ float(states(''sensor.irrigation_unlimited_temp_max_today''),0)>
-        15}}'
-    - condition: template
-      value_template: '{{ int(states(''sensor.irrigation_unlimited_rain_ajastment''),0)>
-        0}}'
-      enabled: false
-  action:
-  - if:
-    - condition: time
-      after: 00:01:00
-      before: '12:01:00'
-    then:
-    - service: irrigation_unlimited.enable
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c1_m
-    - service: irrigation_unlimited.adjust_time
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c1_m
-        percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
-          float(-2) %}  {{ (rain_adj) }}
-
-          '
-      enabled: false
-    - service: irrigation_unlimited.adjust_time
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c1_m
-        percentage: 100
-    else:
-    - service: irrigation_unlimited.enable
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c2_m
-    - service: irrigation_unlimited.adjust_time
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c2_m
-        percentage: '{% set rain_adj = states(''sensor.irrigation_unlimited_rain_ajastment'')|
-          float(-2) %}  {{ (rain_adj) }}
-
-          '
-      enabled: false
-    - service: irrigation_unlimited.adjust_time
-      data:
-        entity_id: binary_sensor.irrigation_unlimited_c2_m
-        percentage: 100
   mode: single
 - id: '1685272713791'
   alias: irrigation_unlimited_finish_v2

@@ -41,14 +41,14 @@ irrigation_unlimited:
             anchor: finish
             day:
               every_n_days: 1
-              start_n_days: 2023-05-13 # Starting date + 1            
+              start_n_days: 2023-05-13 # Starting date + 1
           zones:
             # Session 1
             - zone_id: 1
-              duration: "00:11"
+              duration: "00:09"
               #repeat: 2
             - zone_id: 2
-              duration: "00:11"
+              duration: "00:09"
               #repeat: 2
             ##            - zone_id: [3,6]
             ##              duration: "00:10"
@@ -57,23 +57,23 @@ irrigation_unlimited:
             ##              duration: "00:10"
             #repeat: 3
             - zone_id: 5
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 2
             ##            - zone_id: 6
             ##              duration: "00:05"
             ##              #repeat: 2
             - zone_id: 7
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 3
             - zone_id: 8
-              duration: "00:21"
+              duration: "00:17"
               #repeat: 3
             # Session 2
             - zone_id: 1
-              duration: "00:11"
+              duration: "00:09"
               #repeat: 2
             - zone_id: 2
-              duration: "00:11"
+              duration: "00:09"
               #repeat: 2
             ##            - zone_id: [3, 6]
             ##              duration: "00:10"
@@ -82,26 +82,26 @@ irrigation_unlimited:
             ##              duration: "00:10"
             #repeat: 3
             - zone_id: 5
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 2
             ##            - zone_id: 6
             ##              duration: "00:05"
             ##              #repeat: 2
             - zone_id: 7
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 3
             - zone_id: 8
-              duration: "00:21"
+              duration: "00:17"
               #repeat: 3
             # Session 3
             ##            - zone_id: 4
             ##              duration: "00:07"
             ##              #repeat: 3
             - zone_id: 8
-              duration: "00:21"
+              duration: "00:17"
               #repeat: 3
             - zone_id: 7
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 3
     - name: "Evening_set"
       enabled: true
@@ -142,14 +142,14 @@ irrigation_unlimited:
               after: "00:15"
             day:
               every_n_days: 1
-              start_n_days: 2023-05-13 # Starting date + 1              
+              start_n_days: 2023-05-13 # Starting date + 1
           zones:
             # Session 1
             - zone_id: 1
-              duration: "00:11"
+              duration: "00:09"
               #repeat: 2
             - zone_id: 2
-              duration: "00:11"
+              duration: "00:09"
               #repeat: 2
             ##            - zone_id: [3,6]
             ##              duration: "00:10"
@@ -158,23 +158,23 @@ irrigation_unlimited:
             ##              duration: "00:10"
             #repeat: 3
             - zone_id: 5
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 2
             ##            - zone_id: 6
             ##              duration: "00:05"
             ##              #repeat: 2
             - zone_id: 7
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 3
             - zone_id: 8
-              duration: "00:21"
+              duration: "00:17"
               #repeat: 3
             # Session 2
             - zone_id: 1
-              duration: "00:11"
+              duration: "00:09"
               #repeat: 2
             - zone_id: 2
-              duration: "00:11"
+              duration: "00:09"
               #repeat: 2
             ##            - zone_id: [3, 6]
             ##              duration: "00:10"
@@ -183,26 +183,26 @@ irrigation_unlimited:
             ##              duration: "00:10"
             #repeat: 3
             - zone_id: 5
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 2
             ##            - zone_id: 6
             ##              duration: "00:05"
             ##              #repeat: 2
             - zone_id: 7
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 3
             - zone_id: 8
-              duration: "00:21"
+              duration: "00:17"
               #repeat: 3
             # Session 3
             ##            - zone_id: 4
             ##              duration: "00:07"
             ##              #repeat: 3
             - zone_id: 8
-              duration: "00:21"
+              duration: "00:17"
               #repeat: 3
             - zone_id: 7
-              duration: "00:15"
+              duration: "00:12"
               #repeat: 3
     - name: "Water_drop_1"
       enabled: true
@@ -235,9 +235,9 @@ irrigation_unlimited:
               start_n_days: 2023-05-14 # Starting date + 1
           zones:
             - zone_id: [3]
-              duration: "00:40"
+              duration: "00:30"
             - zone_id: [2]
-              duration: "02:00"
+              duration: "01:00"
     - name: "Water_drop_2"
       enabled: true
       entity_id: "switch.tasmota3_1" # main valve
@@ -269,12 +269,148 @@ irrigation_unlimited:
               start_n_days: 2023-05-13 # Starting date + 1
           zones:
             - zone_id: [3]
-              duration: "00:40"
+              duration: "00:30"
             - zone_id: 1
-              duration: "02:00"
+              duration: "01:00"
+    - name: "Grass Manual"
+      enabled: true
+      entity_id: "switch.tasmota3_1" # main valve
+      all_zones_config: # <= Add these three lines <─┐
+        show: # <= to the configuration            <─┤
+          timeline: true # <= for all zones        <─┘
+      preamble: "00:01"
+      zones:
+        #- zone_id: 1
+        - name: "Watering_right1"
+          entity_id: "switch.tasmota1_3"
+        - name: "Watering_right2"
+          entity_id: "switch.tasmota1_2"
+        - name: "Watering_drop_fruts"
+          entity_id: "switch.tasmota1_1"
+        - name: "Watering_drop_back"
+          entity_id: "switch.tasmota1_4"
+        - name: "Watering_front"
+          entity_id: "switch.tasmota2_1"
+        - name: "Watering_drop_left"
+          entity_id: "switch.tasmota2_2"
+        - name: "Watering_back1"
+          entity_id: "switch.tasmota2_3"
+        - name: "Watering_back2"
+          entity_id: "switch.tasmota2_4"
+      sequences:
+        - name: "Sequences_evening"
+          delay: "00:01"
+          enabled: true
+          #  repeat: 2
+          #schedules:
+            #    start_n_days: now()
+            #    every_n_days: 4
+            #- time: "05:00" - for 5 AM
+            #time:
+            #  sun: "sunset"
+            #  after: "00:15"
+            #day:
+            #  every_n_days: 1
+            #  start_n_days: 2023-05-13 # Starting date + 1
+          zones:
+            # Session 1
+            - zone_id: 1
+              duration: "00:09"
+              #repeat: 2
+            - zone_id: 2
+              duration: "00:09"
+              #repeat: 2
+            ##            - zone_id: [3,6]
+            ##              duration: "00:10"
+            #repeat: 2
+            ##            - zone_id: 4
+            ##              duration: "00:10"
+            #repeat: 3
+            - zone_id: 5
+              duration: "00:12"
+              #repeat: 2
+            ##            - zone_id: 6
+            ##              duration: "00:05"
+            ##              #repeat: 2
+            - zone_id: 7
+              duration: "00:12"
+              #repeat: 3
+            - zone_id: 8
+              duration: "00:17"
+              #repeat: 3
+            # Session 2
+            - zone_id: 1
+              duration: "00:09"
+              #repeat: 2
+            - zone_id: 2
+              duration: "00:09"
+              #repeat: 2
+            ##            - zone_id: [3, 6]
+            ##              duration: "00:10"
+            ##              #repeat: 2
+            ##            - zone_id: 4
+            ##              duration: "00:10"
+            #repeat: 3
+            - zone_id: 5
+              duration: "00:12"
+              #repeat: 2
+            ##            - zone_id: 6
+            ##              duration: "00:05"
+            ##              #repeat: 2
+            - zone_id: 7
+              duration: "00:12"
+              #repeat: 3
+            - zone_id: 8
+              duration: "00:17"
+              #repeat: 3
+            # Session 3
+            ##            - zone_id: 4
+            ##              duration: "00:07"
+            ##              #repeat: 3
+            - zone_id: 8
+              duration: "00:17"
+              #repeat: 3
+            - zone_id: 7
+              duration: "00:12"
+              #repeat: 3
+    - name: "Water_drop_manual"
+      enabled: true
+      entity_id: "switch.tasmota3_1" # main valve
+      all_zones_config: # <= Add these three lines <─┐
+        show: # <= to the configuration            <─┤
+          timeline: true # <= for all zones        <─┘
+      preamble: "00:01"
+      zones:
+        #- zone_id: 1
+        - name: "Wattering Trees"
+          entity_id: "switch.tasmota1_1"
+        - name: "Wattering Trees & Bushes"
+          entity_id: "switch.tasmota1_4"
+        - name: "Wattering  Bushes"
+          entity_id: "switch.tasmota2_2"
+      sequences:
+        - name: "Sequences_water_drop"
+          delay: "00:01"
+          enabled: true
+          #  repeat: 2
+          #schedules:
+           #- time: "05:00" #- for 5 AM
+           # time:
+           #   sun: "sunset"
+           #   after: "00:10"
+           # anchor: finish
+           # day:
+            #  every_n_days: 2
+            #  start_n_days: 2023-05-14 # Starting date + 1
+          zones:
+            - zone_id: [3]
+              duration: "00:30"
+            - zone_id: [1]
+              duration: "01:00"
+            - zone_id: [2]
+              duration: "01:00"              
+
 sensor:
-
-
   - platform: average
     name: irrigation_unlimited_rain_1
     entities:
@@ -341,7 +477,7 @@ sensor:
           {% endif %}
           {{ (Ret_val_tomorrow) }}
 
-##ONLY FOR V1          
+  ##ONLY FOR V1
   #### Levels of temerature
   #### 15C is temperature to start irrigation - defined in automations as conditions
   #### before 21C - one per 72 days = 6 (Morning & Evening = 2)
@@ -375,9 +511,9 @@ sensor:
       irrigation_unlimited_rain_ajastment:
         unit_of_measurement: "%"
         value_template: >
-          {% set rain_y = float(states('sensor.irrigation_unlimited_rain_yesterday_24'), 0) /20 %}
-          {% set rain_n = float(states('sensor.irrigation_unlimited_rain_today'), 0) /10 %}
-          {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /20 %}
+          {% set rain_y = float(states('sensor.irrigation_unlimited_rain_yesterday_24'), 0) /10 %}
+          {% set rain_n = float(states('sensor.irrigation_unlimited_rain_today'), 0) /7 %}
+          {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /8 %}
           {% set temp_max =states('sensor.irrigation_unlimited_temp_max_today') | float(-2) %}
           {% if temp_max < 15 %}
           {% set temp_adj = 0  | float %}
@@ -404,9 +540,9 @@ sensor:
       irrigation_unlimited_rain_ajastment_drop:
         unit_of_measurement: "%"
         value_template: >
-          {% set rain_y = float(states('sensor.irrigation_unlimited_rain_yesterday_24'), 0) /20 %}
-          {% set rain_n = float(states('sensor.irrigation_unlimited_rain_today'), 0) /10 %}
-          {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /20 %}
+          {% set rain_y = float(states('sensor.irrigation_unlimited_rain_yesterday_24'), 0) /10 %}
+          {% set rain_n = float(states('sensor.irrigation_unlimited_rain_today'), 0) /7 %}
+          {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /8 %}
           {% set temp_max =states('sensor.irrigation_unlimited_temp_max_today') | float(-2) %}
           {% if temp_max < 15 %}
           {% set temp_adj = 0  | float %}
@@ -426,4 +562,4 @@ sensor:
           {% if rain_adj < 15 %}
           {% set rain_adj = 0  | int %}
           {% endif %}
-          {{float(rain_adj,0)}}
+          {{int(rain_adj,0)}}
