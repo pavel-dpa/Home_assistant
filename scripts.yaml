@@ -102,6 +102,13 @@ grid_on_termo_on:
   - service: notify.notify
     data:
       message: Termo is on
+  - service: automation.trigger
+    data:
+      skip_condition: true
+    target:
+      entity_id:
+      - automation.temp_control_uf
+      - automation.temp_control_rooms
   mode: single
   icon: mdi:home-thermometer
 new_script:

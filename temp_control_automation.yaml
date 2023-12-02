@@ -14,9 +14,9 @@
         hours: 0
         minutes: 10
         seconds: 0
-##### additional check each 4 hours in case tracking temp has an issue        
+##### additional check each 2 hours in case tracking temp has an issue        
     - platform: time_pattern
-      hours: /4
+      hours: /2
     condition:
     - condition: and
       conditions:
@@ -52,12 +52,14 @@
         device_id:
         - de10e707bb5513ec4affbf111dba0420
         - 5ab68a20d179fbe297e7549a15f6efaa
+      enabled: false
     - service: climate.set_temperature
       data:
         temperature: 27
       target:
         area_id:
         - uffoyer
+      enabled: false  
     - service: climate.set_temperature
       data:
         temperature: 28
@@ -67,6 +69,7 @@
         area_id:
         - ufkitchen
         - uflivingroom
+      enabled: false  
     - service: climate.set_temperature
       data:
         temperature: 19
@@ -137,9 +140,9 @@
         hours: 0
         minutes: 10
         seconds: 0
-##### additional check each 4 hours in case tracking temp has an issue        
+##### additional check each 2 hours in case tracking temp has an issue        
     - platform: time_pattern
-      hours: /4
+      hours: /2
     condition:
     - condition: and
       conditions:
@@ -176,12 +179,14 @@
         device_id:
         - de10e707bb5513ec4affbf111dba0420
         - 5ab68a20d179fbe297e7549a15f6efaa
+      enabled: false  
     - service: climate.set_temperature
       data:
         temperature: 25
       target:
         area_id:
         - uffoyer
+      enabled: false  
     - service: climate.set_temperature
       data:
         temperature: 25
@@ -191,6 +196,7 @@
         area_id:
         - ufkitchen
         - uflivingroom
+      enabled: false 
     - service: climate.set_temperature
       data:
         temperature: 19
@@ -260,9 +266,9 @@
         hours: 0
         minutes: 10
         seconds: 0
-##### additional check each 4 hours in case tracking temp has an issue        
+##### additional check each 2 hours in case tracking temp has an issue        
     - platform: time_pattern
-      hours: /4
+      hours: /2
     condition:
     - condition: and
       conditions:
@@ -293,12 +299,14 @@
         device_id:
         - de10e707bb5513ec4affbf111dba0420
         - 5ab68a20d179fbe297e7549a15f6efaa
+      enabled: false  
     - service: climate.set_temperature
       data:
         temperature: 12
       target:
         area_id:
         - uffoyer
+      enabled: false  
     - service: climate.set_temperature
       data:
         temperature: 15
@@ -308,6 +316,7 @@
         area_id:
         - ufkitchen
         - uflivingroom
+      enabled: false  
     - service: climate.set_temperature
       data:
         temperature: 14

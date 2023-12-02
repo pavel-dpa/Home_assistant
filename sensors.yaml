@@ -1,0 +1,62 @@
+#########Power Grid ###########
+- platform: template
+  sensors:
+    grid_power_state_2:
+      friendly_name: "Power Grid"
+      value_template: >-
+        {% set power_grid_state=states('switch.main_water') %}
+        {% if power_grid_state == 'off' %}
+          On
+        {% else %}
+          Off
+        {% endif%}
+      icon_template: >-
+        {% if  power_grid_state == 'off' %}
+          mdi:power-plug
+        {% else %}
+          mdi:power-plug-off
+        {% endif%}
+
+############rooms_temp#########################
+- platform: template
+  sensors:
+    rooms_temp_settler:
+      unit_of_measurement: "°C"
+      value_template: >
+        {% set temp_max =float(state_attr('weather.home', 'temperature'),0) %}
+        {% if temp_max <-10 %}
+        {% set rooms_val_temp = 22.5  | float %}
+        {% elif temp_max >-10 and temp_max <3 %}
+        {% set rooms_val_temp = 21.5  | float %}
+        {% elif temp_max >3 and temp_max <12 %}
+        {% set rooms_val_temp = 21  | float %}
+        {% elif temp_max >12 and temp_max <16 %}
+        {% set rooms_val_temp = 20  | float %}
+        {% elif temp_max >16 %}
+        {% set rooms_val_temp = 18  | float %}
+        {% endif %}
+        {{ (rooms_val_temp) }}
+
+
+
+
+
+
+#############################################
+- platform: template
+  sensors:
+    main_water_2:
+      value_template: >-
+        {{ states('switch.main_water') }}
+      icon_template: >-
+        {% set valve_main_statese = states('switch.main_water') %}
+        {% if valve_main_statese == 'on' %}
+          mdi:water-pump
+        {% else %}
+          mdi:water-pump-off'
+        {% endif %}
+
+      
+#####      binary_sensor.0x00124b0029120cbc_contact:
+###                   if (state == 'on') return 'mdi:power-plug';
+#######                    if (state == 'off') return 'mdi:power-plug-off;

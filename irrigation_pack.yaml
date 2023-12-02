@@ -97,12 +97,12 @@ irrigation_unlimited:
             ##            - zone_id: 4
             ##              duration: "00:07"
             ##              #repeat: 3
-            - zone_id: 8
-              duration: "00:17"
-              #repeat: 3
-            - zone_id: 7
-              duration: "00:12"
-              #repeat: 3
+            ##- zone_id: 8
+            ##  duration: "00:17"
+            ##  #repeat: 3
+            ##- zone_id: 7
+            ##  duration: "00:12"
+            ##  #repeat: 3
     - name: "Evening_set"
       enabled: true
       entity_id: "switch.tasmota3_1" # main valve
@@ -198,12 +198,12 @@ irrigation_unlimited:
             ##            - zone_id: 4
             ##              duration: "00:07"
             ##              #repeat: 3
-            - zone_id: 8
-              duration: "00:17"
-              #repeat: 3
-            - zone_id: 7
-              duration: "00:12"
-              #repeat: 3
+            ##- zone_id: 8
+            ##  duration: "00:17"
+            ##  #repeat: 3
+            ##- zone_id: 7
+            ##  duration: "00:12"
+            ##  #repeat: 3
     - name: "Water_drop_1"
       enabled: true
       entity_id: "switch.tasmota3_1" # main valve

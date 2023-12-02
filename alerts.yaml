@@ -1,0 +1,30 @@
+#
+#Water leaks alert
+water_leaks_alert:
+ name: water leaks
+ message: Water leaks!
+ done_message: Water is good now.
+ ####entity_id: binary_sensor.technical_leak_water_leak
+ entity_id: binary_sensor.bathroom_1_leak_water_leak
+ state: "on"
+ repeat: 2 # repeat every 2 min
+ can_acknowledge: false
+ skip_first: false
+ notifiers:
+  - admin_mobile
+###########################
+
+
+#Power Grid off alert
+power_grid_off:
+ name: power grid off
+ message: Power grid Off
+ done_message: Power grid On
+ entity_id: binary_sensor.0x00124b0029120cbc_contact
+ state: "off"
+ repeat: 10 # repeat every 10 min
+ can_acknowledge: false
+ skip_first: false
+ notifiers:
+  - admin_mobile  
+######################

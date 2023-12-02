@@ -1,0 +1,544 @@
+- id: '1673726732766'
+  alias: HW_heater_night_on
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /10
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: schedule.hw_night_heater
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.hw_night_heater
+      state: 'off'
+    - condition: device
+      type: is_off
+      device_id: b44aef36117010d2561a502afa0b11d9
+      entity_id: switch.tasmota_7
+      domain: switch
+  action:
+  - type: turn_on
+    device_id: b44aef36117010d2561a502afa0b11d9
+    entity_id: switch.tasmota_7
+    domain: switch
+  - service: notify.notify
+    data:
+      message: HW night is on
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.hw_night_heater
+  mode: single
+- id: '1673732606457'
+  alias: Test_notification
+  description: ''
+  trigger:
+  - platform: device
+    device_id: c3a76d6de50c7686bd7051d3a21eee32
+    domain: device_tracker
+    entity_id: device_tracker.21091116ag
+    type: enters
+    zone: zone.home
+  condition: []
+  action:
+  - service: notify.notify
+    data:
+      message: Pavlo at home
+  mode: single
+- id: '1673856132095'
+  alias: Temp_control_winter
+  description: Control termostats - winter script
+  trigger:
+  - platform: device
+    device_id: d50626e193f0ec3ca722ba91dd6e0c56
+    domain: climate
+    entity_id: climate.01livingroom
+    type: current_temperature_changed
+    below: 21.3
+  condition:
+  - condition: and
+    conditions:
+    - condition: template
+      value_template: '{{state_attr(''climate.01LivingRoom'',''current_temperature'')<21.3}}'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: input_text.temp_mode
+        state: Winter
+    - condition: state
+      entity_id: input_boolean.temperature_control
+      state: 'on'
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 21.5
+    target:
+      device_id:
+      - 508f0752825298be21b447d88d13272b
+      - 167b58c4561fb0cd737b16befe0d5c3c
+  - service: climate.set_temperature
+    data:
+      temperature: 22.5
+    target:
+      device_id:
+      - 1ab2c4cd1555d64f4972dd5630fd3e44
+  - service: climate.set_temperature
+    data:
+      temperature: 28
+    target:
+      device_id:
+      - de10e707bb5513ec4affbf111dba0420
+      - 5ab68a20d179fbe297e7549a15f6efaa
+  - service: climate.set_temperature
+    data:
+      temperature: 27
+    target:
+      area_id:
+      - uffoyer
+  - service: climate.set_temperature
+    data:
+      temperature: 28
+    target:
+      device_id:
+      - d0601d0b80804614a73e4ba0a67821c2
+      area_id:
+      - ufkitchen
+      - uflivingroom
+  - service: climate.set_temperature
+    data:
+      temperature: 19
+    target:
+      device_id:
+      - d50626e193f0ec3ca722ba91dd6e0c56
+  - service: notify.notify
+    data:
+      message: 'Temp activated - Winter '
+  - service: input_text.set_value
+    data:
+      value: Winter
+    target:
+      entity_id: input_text.temp_mode
+  mode: single
+- id: '1674030397694'
+  alias: Water_leaks
+  description: ''
+  trigger:
+  - type: moist
+    platform: device
+    device_id: c52026eaf890fb585b64f5bb03bb6a4e
+    entity_id: binary_sensor.bathroom_1_leak_water_leak
+    domain: binary_sensor
+  - type: moist
+    platform: device
+    device_id: fd7758ab4ceb69d494f71c8430a000d6
+    entity_id: binary_sensor.bathroom_2_leak_water_leak
+    domain: binary_sensor
+  - type: moist
+    platform: device
+    device_id: 7dd4b9ccf6518d201da4c30ed646185c
+    entity_id: binary_sensor.technical_leak_water_leak
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_off
+    device_id: e0a8e8d356f5a6dfdf554f9e46c34dbf
+    entity_id: switch.0x804b50fffeb34c85
+    domain: switch
+  - type: turn_off
+    device_id: 3080b9c89d9692d225fefa392b50bd23
+    entity_id: switch.0x84fd27fffe927f0d
+    domain: switch
+  - type: turn_off
+    device_id: 862a390e759b291bd94777c4dd62c07b
+    entity_id: switch.0x804b50fffeb0d7fe
+    domain: switch
+  - service: notify.notify
+    data:
+      message: WATER LEAKS - WATER IS CLOSED
+  mode: single
+- id: '1674140911254'
+  alias: HW_watter_night_off
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /10
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: schedule.hw_night_heater
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.hw_night_heater
+      state: 'on'
+  action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.hw_night_heater
+  - type: turn_off
+    device_id: b44aef36117010d2561a502afa0b11d9
+    entity_id: switch.tasmota_7
+    domain: switch
+  - service: notify.notify
+    data:
+      message: HW night is off
+  mode: single
+- id: '1674488216169'
+  alias: Termostat_off_power_off
+  description: Control termostats - summer script
+  trigger:
+  - type: not_plugged_in
+    platform: device
+    device_id: df8f5923121f7ac7f59c52fdd1e5299d
+    entity_id: binary_sensor.0x00124b0029120cbc_contact
+    domain: binary_sensor
+  condition:
+  - condition: and
+    conditions:
+    - type: is_not_plugged_in
+      condition: device
+      device_id: df8f5923121f7ac7f59c52fdd1e5299d
+      entity_id: binary_sensor.0x00124b0029120cbc_contact
+      domain: binary_sensor
+    - condition: state
+      entity_id: input_boolean.power_grid_state_helper
+      state: 'on'
+  action:
+  - service: notify.notify
+    data:
+      message: Grid is OFF - Temperature is OFF
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.power_grid_state_helper
+  - service: script.grid_off_termo_off
+    data: {}
+  mode: single
+- id: '1674596628955'
+  alias: Temp_control_spring
+  description: Control thermostats - sprint script
+  trigger:
+  - platform: device
+    device_id: d50626e193f0ec3ca722ba91dd6e0c56
+    domain: climate
+    entity_id: climate.01livingroom
+    type: current_temperature_changed
+    below: 22.2
+    above: 21.4
+  condition:
+  - condition: and
+    conditions:
+    - condition: template
+      value_template: '{{state_attr(''climate.01LivingRoom'',''current_temperature'')>21.4
+        and state_attr(''climate.01LivingRoom'',''current_temperature'')<22.2}}'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: input_text.temp_mode
+        state: Spring
+    - condition: state
+      entity_id: input_boolean.temperature_control
+      state: 'on'
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 21.5
+    target:
+      device_id:
+      - 508f0752825298be21b447d88d13272b
+      - 167b58c4561fb0cd737b16befe0d5c3c
+  - service: climate.set_temperature
+    data:
+      temperature: 22.5
+    target:
+      device_id:
+      - 1ab2c4cd1555d64f4972dd5630fd3e44
+  - service: climate.set_temperature
+    data:
+      temperature: 26
+    target:
+      device_id:
+      - de10e707bb5513ec4affbf111dba0420
+      - 5ab68a20d179fbe297e7549a15f6efaa
+  - service: climate.set_temperature
+    data:
+      temperature: 25
+    target:
+      area_id:
+      - uffoyer
+  - service: climate.set_temperature
+    data:
+      temperature: 25
+    target:
+      device_id:
+      - d0601d0b80804614a73e4ba0a67821c2
+      area_id:
+      - ufkitchen
+      - uflivingroom
+  - service: climate.set_temperature
+    data:
+      temperature: 19
+    target:
+      device_id:
+      - d50626e193f0ec3ca722ba91dd6e0c56
+  - service: notify.notify
+    data:
+      message: Temp activated - Spring
+  - service: input_text.set_value
+    data:
+      value: Spring
+    target:
+      entity_id: input_text.temp_mode
+  mode: single
+- id: '1674680920351'
+  alias: Temp_control_restart
+  description: Run check for proper restart after power off
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition:
+  - type: is_not_open
+    condition: device
+    device_id: 7bdeccb84efbc427478b0e98c475f391
+    entity_id: binary_sensor.0x00124b0029120b77_contact
+    domain: binary_sensor
+  action:
+  - delay:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  - service: automation.trigger
+    data: {}
+    target:
+      entity_id:
+      - automation.temp_control_winter
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - service: automation.trigger
+    data: {}
+    target:
+      entity_id:
+      - automation.temp_control_spring
+  mode: single
+- id: '1674714034511'
+  alias: Termostat_off_power_on
+  description: Control termostats - power on
+  trigger:
+  - type: plugged_in
+    platform: device
+    device_id: df8f5923121f7ac7f59c52fdd1e5299d
+    entity_id: binary_sensor.0x00124b0029120cbc_contact
+    domain: binary_sensor
+  condition:
+  - condition: and
+    conditions:
+    - type: is_plugged_in
+      condition: device
+      device_id: df8f5923121f7ac7f59c52fdd1e5299d
+      entity_id: binary_sensor.0x00124b0029120cbc_contact
+      domain: binary_sensor
+    - condition: state
+      entity_id: input_boolean.power_grid_state_helper
+      state: 'off'
+  action:
+  - service: notify.notify
+    data:
+      message: Grid is ON- Temperature is ON in 10 min
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.power_grid_state_helper
+  - service: script.grid_on_termo_on
+    data: {}
+  mode: single
+- id: '1675332030863'
+  alias: Temp_control_summer
+  description: Control thermostats - summer script
+  trigger:
+  - platform: device
+    device_id: d50626e193f0ec3ca722ba91dd6e0c56
+    domain: climate
+    entity_id: climate.01livingroom
+    type: current_temperature_changed
+    above: 22.3
+  condition:
+  - condition: and
+    conditions:
+    - condition: template
+      value_template: '{{state_attr(''climate.01LivingRoom'',''current_temperature'')>22.3}}'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: input_text.temp_mode
+        state: Summer
+    - condition: state
+      entity_id: input_boolean.temperature_control
+      state: 'on'
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 15
+    target:
+      device_id:
+      - 508f0752825298be21b447d88d13272b
+      - 1ab2c4cd1555d64f4972dd5630fd3e44
+      - 167b58c4561fb0cd737b16befe0d5c3c
+  - service: climate.set_temperature
+    data:
+      temperature: 12
+    target:
+      device_id:
+      - de10e707bb5513ec4affbf111dba0420
+      - 5ab68a20d179fbe297e7549a15f6efaa
+  - service: climate.set_temperature
+    data:
+      temperature: 12
+    target:
+      area_id:
+      - uffoyer
+  - service: climate.set_temperature
+    data:
+      temperature: 15
+    target:
+      device_id:
+      - d0601d0b80804614a73e4ba0a67821c2
+      area_id:
+      - ufkitchen
+      - uflivingroom
+  - service: climate.set_temperature
+    data:
+      temperature: 14
+    target:
+      device_id:
+      - d50626e193f0ec3ca722ba91dd6e0c56
+  - service: notify.notify
+    data:
+      message: Temp activated - Summer
+  - service: input_text.set_value
+    data:
+      value: Summer
+    target:
+      entity_id: input_text.temp_mode
+  mode: single
+- id: '1677227078813'
+  alias: irrigation_unlimited_counter_update
+  description: Update counter of days in case max temp changed
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.irrigation_unlimited_counter
+  condition:
+  - condition: template
+    value_template: '{{states(''sensor.irrigation_unlimited_counter'') | int !=  states(''input_number.irrigation_counter_check'')
+      | int}}'
+  action:
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.irrigation_counter
+    data:
+      value: "{{ (states('sensor.irrigation_unlimited_counter') | float(0))  +\n    (states('input_number.irrigation_counter')
+        | float(0))  -\n  (states('input_number.irrigation_unlimited_counter_check')
+        | float(0)) }}"
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.irrigation_counter_check
+    data:
+      value: '{{ states(''sensor.irrigation_unlimited_counter'') | int }}'
+  mode: single
+- id: '1677230846021'
+  alias: irrigation_unlimited_count_down
+  description: Midnight and noon - minus one for counters
+  trigger:
+  - platform: time
+    at: 00:05:00
+  - platform: time
+    at: '12:05:00'
+  condition:
+  - condition: state
+    entity_id: input_boolean.irrigation_state
+    state: 'on'
+  action:
+  - service: input_number.set_value
+    data:
+      value: '{{ states(''input_number.irrigation_counter'') | int - 1 }}'
+    target:
+      entity_id: input_number.irrigation_counter
+  - if:
+    - condition: template
+      value_template: '"{{ states(''sensor.irrigation_unlimited_counter'')<1}}"'
+    then:
+    - service: input_number.set_value
+      data:
+        value: '{{ states('' irrigation_counter_check'') | int }}'
+      target:
+        entity_id: input_number.irrigation_counter
+  mode: single
+- id: '1677245580092'
+  alias: irrigation_unlimited_finish
+  description: Finish irrigation
+  trigger:
+  - platform: event
+    event_type: irrigation_unlimited_finish
+  condition: []
+  action:
+  - service: irrigation_unlimited.disable
+    data:
+      entity_id: binary_sensor.irrigation_unlimited_c1_m
+  - service: irrigation_unlimited.disable
+    data:
+      entity_id: binary_sensor.irrigation_unlimited_c1_m
+  - service: notify.admin_mobile
+    data:
+      message: 'Time: {{ as_local(trigger.event.time_fired).strftime(''%c'') }}
+
+        Controller: {{ trigger.event.data.controller.index + 1 }} {{ trigger.event.data.controller.name
+        }}
+
+        Sequence: {{ trigger.event.data.sequence.index + 1 }} {{ trigger.event.data.sequence.name
+        }}
+
+        Schedule: {% if trigger.event.data.schedule.index is integer %}{{ trigger.event.data.schedule.index
+        + 1 }} {{ trigger.event.data.schedule.name }}{% else %}Manual{% endif %}
+
+        Duration: {{ timedelta(seconds=trigger.event.data.run.duration) }}irrigation
+        done
+
+        '
+  mode: single
+- id: '1677246213813'
+  alias: irrigation_unlimited_run
+  description: enable irrigation
+  trigger:
+  - platform: state
+    entity_id:
+    - input_number.irrigation_counter
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_number.irrigation_counter
+      state: '1'
+    - condition: state
+      entity_id: input_boolean.irrigation_state
+      state: 'on'
+  action:
+  - if:
+    - condition: time
+      after: 00:01:00
+      before: '12:01:00'
+    then:
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c1_m
+    else:
+    - service: irrigation_unlimited.enable
+      data:
+        entity_id: binary_sensor.irrigation_unlimited_c1_m
+  mode: single
