@@ -17,25 +17,34 @@
           mdi:power-plug-off
         {% endif%}
 
+
+
+
+
+
 ############rooms_temp#########################
-- platform: template
-  sensors:
-    rooms_temp_settler:
-      unit_of_measurement: "°C"
-      value_template: >
-        {% set temp_max =float(state_attr('weather.home', 'temperature'),0) %}
-        {% if temp_max <-10 %}
-        {% set rooms_val_temp = 22.5  | float %}
-        {% elif temp_max >-10 and temp_max <3 %}
-        {% set rooms_val_temp = 21.5  | float %}
-        {% elif temp_max >3 and temp_max <12 %}
-        {% set rooms_val_temp = 21  | float %}
-        {% elif temp_max >12 and temp_max <16 %}
-        {% set rooms_val_temp = 20  | float %}
-        {% elif temp_max >16 %}
-        {% set rooms_val_temp = 18  | float %}
-        {% endif %}
-        {{ (rooms_val_temp) }}
+#- platform: template
+#  sensors:
+#      rooms_temp_settler:
+#        unit_of_measurement: "°C"
+#        value_template: >
+#          {% set base_temp  = float(state_attr('climate.01LivingRoom','current_temperature'),0) %}  
+#          {% set rooms_val_temp = base_temp*base_temp*-2.551+107.5*base_temp-1110  | float %}
+#          {{ (rooms_val_temp) }}
+### OLD version
+###      {% set temp_max =float(state_attr('weather.home', 'temperature'),0) %}
+###        {% if temp_max <-10 %}
+###        {% set rooms_val_temp = 22.5  | float %}
+###        {% elif temp_max >-10 and temp_max <3 %}
+###        {% set rooms_val_temp = 21.5  | float %}
+###        {% elif temp_max >3 and temp_max <12 %}
+###        {% set rooms_val_temp = 21  | float %}
+###        {% elif temp_max >12 and temp_max <16 %}
+###        {% set rooms_val_temp = 20  | float %}
+###        {% elif temp_max >16 %}
+###        {% set rooms_val_temp = 18  | float %}
+###        {% endif %}
+###        {{ (rooms_val_temp) }}
 
 
 

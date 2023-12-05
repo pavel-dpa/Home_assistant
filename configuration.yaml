@@ -1,11 +1,9 @@
-
 # Loads default set of integrations. Do not remove.
 default_config:
 
 # Load frontend themes from the themes folder
 frontend:
   themes: !include_dir_merge_named themes
-
 
 #lovelace:
 #  mode: yaml
@@ -29,7 +27,6 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 sensor: !include sensors.yaml
 
-
 ###############################
 ######MANAUL###################
 ###duckdns
@@ -37,16 +34,11 @@ sensor: !include sensors.yaml
 #  ssl_certificate: /ssl/fullchain.pem
 #  ssl_key: /ssl/privkey.pem
 
-
-
-
-
 recorder:
   purge_keep_days: 20
   commit_interval: 30
-  
-####alert: !include alerts.yaml
 
+####alert: !include alerts.yaml
 
 notify:
   - name: admin_mobile
@@ -58,20 +50,33 @@ notify:
 ## leaks
 ## HW heater
 
-
 ##### Temp control automations
 automation mine: !include temp_control_automation.yaml
 ## automation script: !include temp_control_scripts.yaml
 ## add helpers
 
-
-
-
 ###### irrigations part
 ## add automation
 ## add helpers
 homeassistant:
-  packages: 
+  packages:
     irrigation_pack: !include irrigation_pack.yaml
 
-
+############rooms_temp#########################
+template:
+  - trigger:
+      - platform: homeassistant
+        event: start
+      - platform: time_pattern
+        hours: "/1"
+    sensor:
+      - name: "rooms_temp_settler"
+        unit_of_measurement: "°C"
+        state: >
+          {% set base_temp_1  = float(state_attr('climate.01LivingRoom','current_temperature'),0) %}
+          {% if base_temp_1 == 0 %}
+          {% set rooms_val_temp_1 = 21  | float %}
+          {% else %}  
+          {% set rooms_val_temp_1 = (base_temp_1*base_temp_1*-0.2825+10.808*base_temp_1-80.342)  %}
+          {% endif %}  
+          {{ (rooms_val_temp_1) | round(2) }}

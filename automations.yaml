@@ -164,6 +164,12 @@
         != float(state_attr(''climate.02childrenroom'', ''temperature''),0)
 
         }}'
+    - alias: 'Limits of work& formula '
+      condition: numeric_state
+      entity_id: climate.01livingroom
+      attribute: current_temperature
+      above: 19.4
+      below: 22.4
   action:
   - if:
     - condition: template
@@ -446,18 +452,21 @@
     - condition: state
       entity_id: input_boolean.temperature_control
       state: 'on'
-    - condition: numeric_state
+    - alias: 'Limits of work& formula '
+      condition: numeric_state
       entity_id: climate.01livingroom
       attribute: current_temperature
       above: 21.2
-      below: 22.5
-      alias: 'Limits of work& formula '
+      below: 22.3
+      enabled: false
   action:
   - service: climate.set_temperature
     data:
-      temperature: '{% set base_temp  = float(state_attr(''climate.01LivingRoom'',''current_temperature''),0)
-        %} {% set uf_val_temp = base_temp*base_temp*-18.333+783.33*base_temp-8339.3
-        %} {{ (uf_val_temp) }}'
+      temperature: '{% set rooms_val_temp  = float(state_attr(''climate.01LivingRoom'',''current_temperature''),0)
+        %} {% set base_temp  = rooms_val_temp %} {% if rooms_val_temp <= 21.26 %}
+        {% set base_temp = 21.26  | float %} {% elif rooms_val_temp >=22.3 %} {% set
+        base_temp = 22.3  | float %} {% endif %}   {% set uf_val_temp=base_temp*base_temp*-7.3491+309.31*base_temp-3226.2
+        %}  {{(uf_val_temp)| round(2) }}'
     target:
       entity_id:
       - climate.uf01bathroom
@@ -466,18 +475,22 @@
     enabled: true
   - service: climate.set_temperature
     data:
-      temperature: '{% set base_temp  = float(state_attr(''climate.01LivingRoom'',''current_temperature''),0)
-        %}   {% set uf_val_temp = base_temp*base_temp*-16.667+711.67*base_temp-7570
-        %}  {{ (uf_val_temp) }}'
+      temperature: '{% set rooms_val_temp  = float(state_attr(''climate.01LivingRoom'',''current_temperature''),0)
+        %} {% set base_temp  = rooms_val_temp %} {% if rooms_val_temp <= 21.13 %}
+        {% set base_temp = 21.13  | float %} {% elif rooms_val_temp >=22.3 %} {% set
+        base_temp = 22.3  | float %} {% endif %} {% set uf_val_temp =base_temp*base_temp*-6.1364+259.17*base_temp-2709.5
+        %}  {{ (uf_val_temp)| round(2) }}'
     target:
       entity_id:
       - climate.uffoyer
     alias: Set UFFoyer
   - service: climate.set_temperature
     data:
-      temperature: '{% set base_temp  = float(state_attr(''climate.01LivingRoom'',''current_temperature''),0)
-        %}   {% set uf_val_temp = base_temp*base_temp*-14.167+601.67*base_temp-6360.2
-        %}  {{ (uf_val_temp) }}'
+      temperature: '{% set rooms_val_temp  = float(state_attr(''climate.01LivingRoom'',''current_temperature''),0)
+        %} {% set base_temp  = rooms_val_temp %} {% if rooms_val_temp <= 21.25  %}
+        {% set base_temp = 21.25  | float %} {% elif rooms_val_temp >=22.3 %} {% set
+        base_temp = 22.3  | float %} {% endif %} {% set uf_val_temp =base_temp*base_temp*-10.097+426.9*base_temp-4484.2
+        %}  {{ (uf_val_temp)| round(2) }}'
     target:
       entity_id:
       - climate.uflivingroom
