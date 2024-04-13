@@ -410,6 +410,33 @@ irrigation_unlimited:
             - zone_id: [2]
               duration: "01:00"              
 
+
+
+#  workaround due to the fact normal way states('sensor.next_day_temp') was disabled
+template:
+  - trigger:
+      - platform: time_pattern
+        hours: /1
+    action:
+      - service: weather.get_forecasts
+        data:
+          type: daily
+        target:
+          entity_id: weather.home
+        response_variable: daily
+    sensor:
+      - name: "next_day_temp"
+        state: "{{ daily['weather.home'].forecast[1].temperature|float(default=0) }}"
+      - name: "next_plus_day_temp"
+        state: "{{ daily['weather.home'].forecast[2].temperature|float(default=0) }}"        
+      - name: "next_day_precipitation"
+        state: "{{ daily['weather.home'].forecast[1].precipitation|float(default=0) }}"
+      - name: "next_plus_day_precipitation"
+        state: "{{ daily['weather.home'].forecast[2].precipitation|float(default=0) }}"        
+      - name: "next_plus2_day_precipitation"
+        state: "{{ daily['weather.home'].forecast[3].precipitation|float(default=0) }}"    
+
+
 sensor:
   - platform: average
     name: irrigation_unlimited_rain_1
@@ -437,8 +464,8 @@ sensor:
     sensors:
       irrigation_unlimited_temp_max_today:
         value_template: >
-          {% set temp_max_forecast_0 =float((state_attr('weather.home', 'forecast')[0].temperature),0) %}
-          {% set temp_max_forecast_1 =float((state_attr('weather.home', 'forecast')[1].temperature),0) %}
+          {% set temp_max_forecast_0 =float(states('sensor.next_day_temp'),0) %}
+          {% set temp_max_forecast_1 =float(states('sensor.next_plus_day_temp'),0) %}
           {% if now().hour in [0, 1, 2, 3] %}
           {% set Ret_val =  temp_max_forecast_1 %}
           {% else %}
@@ -453,8 +480,8 @@ sensor:
       irrigation_unlimited_rain_today:
         unit_of_measurement: "mm"
         value_template: >
-          {% set rain_today_0 =float((state_attr('weather.home', 'forecast')[0].precipitation),0) %}
-          {% set rain_today_1 =float((state_attr('weather.home', 'forecast')[1].precipitation),0) %}
+          {% set rain_today_0 =float(states('sensor.next_day_precipitation'),0) %}
+          {% set rain_today_1 =float(states('sensor.next_plus_day_precipitation'),0) %}
           {% if now().hour in [0, 1, 2, 3] %}
           {% set Ret_val_today =  rain_today_1 %}
           {% else %}
@@ -468,8 +495,8 @@ sensor:
       irrigation_unlimited_rain_tomorrow:
         unit_of_measurement: "mm"
         value_template: >
-          {% set rain_tom_1 =float((state_attr('weather.home', 'forecast')[1].precipitation),0) %}
-          {% set rain_tom_2 =float((state_attr('weather.home', 'forecast')[2].precipitation),0) %}
+          {% set rain_tom_1 =float(states('sensor.next_plus_day_precipitation'),0) %}
+          {% set rain_tom_2 =float(states('sensor.next_plus2_day_precipitation'),0) %}
           {% if now().hour in [0, 1, 2, 3] %}
           {% set Ret_val_tomorrow =  rain_tom_2 %}
           {% else %}
