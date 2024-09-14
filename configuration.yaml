@@ -62,6 +62,11 @@ homeassistant:
   packages:
     irrigation_pack: !include irrigation_pack.yaml
 
+pyscript:
+  allow_all_imports: true
+  hass_is_global: true
+
+
 ############rooms_temp#########################
 template:
   - trigger:
