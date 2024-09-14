@@ -425,23 +425,24 @@ template:
           entity_id: weather.home
         response_variable: daily
     sensor:
+      - name: "today_day_temp"
+        state: "{{ daily['weather.home'].forecast[0].temperature|float(default=0) }}"
       - name: "next_day_temp"
-        state: "{{ daily['weather.home'].forecast[1].temperature|float(default=0) }}"
-      - name: "next_plus_day_temp"
-        state: "{{ daily['weather.home'].forecast[2].temperature|float(default=0) }}"        
+        state: "{{ daily['weather.home'].forecast[1].temperature|float(default=0) }}"        
+      - name: "today_day_precipitation"
+        state: "{{ daily['weather.home'].forecast[0].precipitation|float(default=0) }}"
       - name: "next_day_precipitation"
-        state: "{{ daily['weather.home'].forecast[1].precipitation|float(default=0) }}"
-      - name: "next_plus_day_precipitation"
-        state: "{{ daily['weather.home'].forecast[2].precipitation|float(default=0) }}"        
+        state: "{{ daily['weather.home'].forecast[1].precipitation|float(default=0) }}"        
       - name: "next_plus2_day_precipitation"
-        state: "{{ daily['weather.home'].forecast[3].precipitation|float(default=0) }}"    
+        state: "{{ daily['weather.home'].forecast[2].precipitation|float(default=0) }}"    
 
 
 sensor:
   - platform: average
     name: irrigation_unlimited_rain_1
     entities:
-      - sensor.openweathermap_forecast_precipitation
+      #- sensor.openweathermap_forecast_precipitation
+      - sensor.today_day_precipitation
     precision: 2
     start: "{{ now().replace(hour=0).replace(minute=30).replace(second=0) - timedelta(days=1) }}"
     end: "{{ now().replace(hour=23).replace(minute=59).replace(second=0) - timedelta(days=1) }}"
@@ -457,16 +458,17 @@ sensor:
     sensors:
       irrigation_unlimited_rain_yesterday_24:
         unit_of_measurement: "mm"
-        value_template: "{{ float(states('sensor.irrigation_unlimited_rain_1'),0) * 24}}"
+        #value_template: "{{ float(states('sensor.irrigation_unlimited_rain_1'),0) * 24}}"
+        value_template: "{{ float(states('sensor.irrigation_unlimited_rain_1'),0)}}"
 
   # implemenation related to 5 AM hour when accurweather update data
   - platform: template
     sensors:
       irrigation_unlimited_temp_max_today:
         value_template: >
-          {% set temp_max_forecast_0 =float(states('sensor.next_day_temp'),0) %}
-          {% set temp_max_forecast_1 =float(states('sensor.next_plus_day_temp'),0) %}
-          {% if now().hour in [0, 1, 2, 3] %}
+          {% set temp_max_forecast_0 =float(states('sensor.today_day_temp'),0) %}
+          {% set temp_max_forecast_1 =float(states('sensor.next_day_temp'),0) %}
+          {% if now().hour in [0, 1, 2, 3, 4] %}
           {% set Ret_val =  temp_max_forecast_1 %}
           {% else %}
           {% set Ret_val =  temp_max_forecast_0 %}
@@ -480,12 +482,12 @@ sensor:
       irrigation_unlimited_rain_today:
         unit_of_measurement: "mm"
         value_template: >
-          {% set rain_today_0 =float(states('sensor.next_day_precipitation'),0) %}
-          {% set rain_today_1 =float(states('sensor.next_plus_day_precipitation'),0) %}
-          {% if now().hour in [0, 1, 2, 3] %}
+          {% set rain_today_0 =float(states('sensor.today_day_precipitation'),0) %}
+          {% set rain_today_1 =float(states('sensor.next_day_precipitation'),0) %}
+          {% if now().hour in [0, 1, 2, 3, 4] %}
           {% set Ret_val_today =  rain_today_1 %}
           {% else %}
-          {% set Ret_val_today =  rain_today_0 %}
+          {% set Ret_val_today =  rain_today_1 %}
           {% endif %}
           {{ (Ret_val_today) }}
 
@@ -495,12 +497,12 @@ sensor:
       irrigation_unlimited_rain_tomorrow:
         unit_of_measurement: "mm"
         value_template: >
-          {% set rain_tom_1 =float(states('sensor.next_plus_day_precipitation'),0) %}
-          {% set rain_tom_2 =float(states('sensor.next_plus2_day_precipitation'),0) %}
-          {% if now().hour in [0, 1, 2, 3] %}
+          {% set rain_tom_1 =float(states('sensor.next_day_precipitation'),0) %}
+          {% set rain_tom_2 =float(states('sensor.next_plus_day_precipitation'),0) %}
+          {% if now().hour in [0, 1, 2, 3, 4] %}
           {% set Ret_val_tomorrow =  rain_tom_2 %}
           {% else %}
-          {% set Ret_val_tomorrow =  rain_tom_1 %}
+          {% set Ret_val_tomorrow =  rain_tom_2 %}
           {% endif %}
           {{ (Ret_val_tomorrow) }}
 
@@ -517,13 +519,13 @@ sensor:
         unit_of_measurement: "mm"
         value_template: >
           {% set temp_max =states('sensor.irrigation_unlimited_temp_max_today') | float(-2) %}
-          {% if temp_max <21 %}
+          {% if temp_max <19 %}
           {% set IUC_val = 6  | int %}
-          {% elif temp_max >21 and temp_max <25 %}
+          {% elif temp_max >19 and temp_max <23 %}
           {% set IUC_val = 4  | int %}
-          {% elif temp_max >25 and temp_max <30 %}
+          {% elif temp_max >23 and temp_max <28 %}
           {% set IUC_val = 2  | int %}
-          {% elif temp_max >30 %}
+          {% elif temp_max >28 %}
           {% set IUC_val = 1  | int %}
           {% endif %}
           {{ (IUC_val) }}
@@ -544,13 +546,13 @@ sensor:
           {% set temp_max =states('sensor.irrigation_unlimited_temp_max_today') | float(-2) %}
           {% if temp_max < 15 %}
           {% set temp_adj = 0  | float %}
-          {% elif temp_max >=15 and temp_max <21 %}
+          {% elif temp_max >=15 and temp_max <19 %}
           {% set temp_adj =  2/4 | float  %}
-          {% elif temp_max >=21 and temp_max <25 %}
+          {% elif temp_max >=19 and temp_max <23 %}
           {% set temp_adj =  2/3 | float  %}
-          {% elif temp_max >=25 and temp_max <30 %}
+          {% elif temp_max >=23 and temp_max <28 %}
           {% set temp_adj =  1 | float  %}
-          {% elif temp_max >=30 %}
+          {% elif temp_max >=28 %}
           {% set temp_adj =  1 | float  %}
           {% endif %}
           {% set rain_adj = float((1 - (rain_y+rain_n+rain_t))*temp_adj, 0)*100 %}

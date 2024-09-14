@@ -13,6 +13,7 @@
     - condition: state
       entity_id: input_boolean.hw_night_heater
       state: 'off'
+      enabled: false
     - condition: device
       type: is_off
       device_id: 2af4ef0f2bcda9a25e0f0bbf7ea493d2
@@ -216,6 +217,8 @@
       hours: 0
       minutes: 20
       seconds: 0
+  - platform: homeassistant
+    event: start
   condition: []
   action:
   - if:
