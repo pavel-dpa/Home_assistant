@@ -1,14 +1,5 @@
 #########Power Grid ###########
-template:
-- sensor:
-  - default_entity_id: sensor.grid_power_state_2
-    icon: "{% if  power_grid_state == 'off' %}\n  mdi:power-plug\n{% else %}\n  mdi:power-plug-off\n{%
-      endif%}"
-    name: Power Grid
-    state: "{% set power_grid_state=states('switch.main_water') %} {% if power_grid_state
-      == 'off' %}\n  On\n{% else %}\n  Off\n{% endif%}"
-
-#- platform: template
+- platform: template
   sensors:
     grid_power_state_2:
       friendly_name: "Power Grid"
@@ -26,18 +17,13 @@ template:
           mdi:power-plug-off
         {% endif%}
 
-
-
-
-
-
 ############rooms_temp#########################
 #- platform: template
 #  sensors:
 #      rooms_temp_settler:
 #        unit_of_measurement: "°C"
 #        value_template: >
-#          {% set base_temp  = float(state_attr('climate.01LivingRoom','current_temperature'),0) %}  
+#          {% set base_temp  = float(state_attr('climate.01LivingRoom','current_temperature'),0) %}
 #          {% set rooms_val_temp = base_temp*base_temp*-2.551+107.5*base_temp-1110  | float %}
 #          {{ (rooms_val_temp) }}
 ### OLD version
@@ -56,15 +42,11 @@ template:
 ###        {{ (rooms_val_temp) }}
 - platform: template
   sensors:
-      uf_room_living:
-        unit_of_measurement: "°C"
-        value_template: >
-          {% set base_temp  = float(state_attr('climate.01LivingRoom','current_temperature'),0) %}  
-          {{ (base_temp) }}
-
-
-
-
+    uf_room_living:
+      unit_of_measurement: "°C"
+      value_template: >
+        {% set base_temp  = float(state_attr('climate.01LivingRoom','current_temperature'),0) %}  
+        {{ (base_temp) }}
 
 #############################################
 - platform: template
@@ -80,7 +62,6 @@ template:
           mdi:water-pump-off'
         {% endif %}
 
-      
 #####      binary_sensor.0x00124b0029120cbc_contact:
 ###                   if (state == 'on') return 'mdi:power-plug';
 #######                    if (state == 'off') return 'mdi:power-plug-off;

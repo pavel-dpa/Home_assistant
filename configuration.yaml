@@ -67,6 +67,7 @@ pyscript:
   hass_is_global: true
 
 
+  
 ############rooms_temp#########################
 template:
   - trigger:
@@ -75,13 +76,67 @@ template:
       - platform: time_pattern
         hours: "/1"
     sensor:
-      - name: "rooms_temp_settler"
+    - name: "rooms_temp_settler"
+      unit_of_measurement: "°C"
+      state: >
+        {% set base_temp_1  = float(state_attr('climate.01LivingRoom','current_temperature'),0) %}
+        {% if base_temp_1 == 0 %}
+        {% set rooms_val_temp_1 = 21  | float %}
+        {% else %}  
+        {% set rooms_val_temp_1 = (base_temp_1*base_temp_1*-0.2825+10.808*base_temp_1-80.342)  %}
+        {% endif %}  
+        {{ (rooms_val_temp_1) | round(2) }}
+
+
+
+
+  ############UF_temp#########################
+  - trigger:
+      - platform: homeassistant
+        event: start
+      - platform: time_pattern
+        hours: "/1"
+      - device_id: 34a0cc5fb560a8a8fa512de09076cc8e
+        domain: climate
+        entity_id: b7699167c5acf518728de30ef1d1a1ba
+        type: current_temperature_changed
+        trigger: device
+        above: 15
+        below: 25
+    ###      - entity_id: input_number.uf_refine_temp ### don't know how to attache
+    sensor:
+      - name: "UF_temp_settler"
         unit_of_measurement: "°C"
         state: >
           {% set base_temp_1  = float(state_attr('climate.01LivingRoom','current_temperature'),0) %}
+          {% set UF_temp_ajust = float(states('input_number.uf_refine_temp'),0) %}
           {% if base_temp_1 == 0 %}
           {% set rooms_val_temp_1 = 21  | float %}
           {% else %}  
-          {% set rooms_val_temp_1 = (base_temp_1*base_temp_1*-0.2825+10.808*base_temp_1-80.342)  %}
+          {% set rooms_val_temp_1 = base_temp_1 %}
           {% endif %}  
+          {% set rooms_val_temp_1=rooms_val_temp_1+UF_temp_ajust %}
           {{ (rooms_val_temp_1) | round(2) }}
+
+
+
+climate:
+  - platform: smart_thermostat
+    name: Smart Thermostat
+    unique_id: smart_thermostat_m_UF
+    heater: input_number.uf_room_living222
+    outdoor_sensor: weather.forecast_home
+    target_sensor: sensor.uf_room_living
+    min_temp: -2.5
+    max_temp: 2.5
+    ac_mode: False
+    target_temp: 21
+    keep_alive:
+      seconds: 60
+    away_temp: 0
+    target_temp_step: 0.1
+    kp: 5
+    ki: 0.01
+    kd: 500
+    output_min: 0
+    output_max: 99
