@@ -1,3 +1,4 @@
+
 #########Power Grid ###########
 - platform: template
   sensors:

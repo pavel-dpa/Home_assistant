@@ -1,4 +1,4 @@
-# Example configuration.yaml entry
+# UPDATED config for teamplate update 2025
 irrigation_unlimited:
   controllers:
     - name: "Morning_set"
@@ -411,32 +411,6 @@ irrigation_unlimited:
               duration: "01:00"              
 
 
-
-#  workaround due to the fact normal way states('sensor.next_day_temp') was disabled
-template:
-  - trigger:
-      - platform: time_pattern
-        hours: /1
-    action:
-      - service: weather.get_forecasts
-        data:
-          type: daily
-        target:
-          entity_id: weather.home
-        response_variable: daily
-    sensor:
-      - name: "today_day_temp"
-        state: "{{ daily['weather.home'].forecast[0].temperature|float(default=0) }}"
-      - name: "next_day_temp"
-        state: "{{ daily['weather.home'].forecast[1].temperature|float(default=0) }}"        
-      - name: "today_day_precipitation"
-        state: "{{ daily['weather.home'].forecast[0].precipitation|float(default=0) }}"
-      - name: "next_day_precipitation"
-        state: "{{ daily['weather.home'].forecast[1].precipitation|float(default=0) }}"        
-      - name: "next_plus2_day_precipitation"
-        state: "{{ daily['weather.home'].forecast[2].precipitation|float(default=0) }}"    
-
-
 sensor:
   - platform: average
     name: irrigation_unlimited_rain_1
@@ -448,147 +422,9 @@ sensor:
     end: "{{ now().replace(hour=23).replace(minute=59).replace(second=0) - timedelta(days=1) }}"
     scan_interval: 600
 
-  #  - platform: template
-  #    sensors:
-  #      irrigation_unlimited_rain_today_24:
-  #        unit_of_measurement: 'mm'
-  #        value_template:  "{{ float(states('sensor.irrigation_unlimited_rain_0'),0)* 24}}"
-  #
-  - platform: template
-    sensors:
-      irrigation_unlimited_rain_yesterday_24:
-        unit_of_measurement: "mm"
-        #value_template: "{{ float(states('sensor.irrigation_unlimited_rain_1'),0) * 24}}"
-        value_template: "{{ float(states('sensor.irrigation_unlimited_rain_1'),0)}}"
 
-  # implemenation related to 5 AM hour when accurweather update data
-  - platform: template
-    sensors:
-      irrigation_unlimited_temp_max_today:
-        value_template: >
-          {% set temp_max_forecast_0 =float(states('sensor.today_day_temp'),0) %}
-          {% set temp_max_forecast_1 =float(states('sensor.next_day_temp'),0) %}
-          {% if now().hour in [0, 1, 2, 3, 4] %}
-          {% set Ret_val =  temp_max_forecast_1 %}
-          {% else %}
-          {% set Ret_val =  temp_max_forecast_0 %}
-          {% endif %}
-          {{ (Ret_val) }}
-        unit_of_measurement: "°C"
 
-  # implemenation related to 5 AM hour when accurweather update data
-  - platform: template
-    sensors:
-      irrigation_unlimited_rain_today:
-        unit_of_measurement: "mm"
-        value_template: >
-          {% set rain_today_0 =float(states('sensor.today_day_precipitation'),0) %}
-          {% set rain_today_1 =float(states('sensor.next_day_precipitation'),0) %}
-          {% if now().hour in [0, 1, 2, 3, 4] %}
-          {% set Ret_val_today =  rain_today_1 %}
-          {% else %}
-          {% set Ret_val_today =  rain_today_0 %}
-          {% endif %}
-          {{ (Ret_val_today) }}
 
-  # implemenation related to 5 AM hour when accurweather update data
-  - platform: template
-    sensors:
-      irrigation_unlimited_rain_tomorrow:
-        unit_of_measurement: "mm"
-        value_template: >
-          {% set rain_tom_1 =float(states('sensor.next_day_precipitation'),0) %}
-          {% set rain_tom_2 =float(states('sensor.next_plus_day_precipitation'),0) %}
-          {% if now().hour in [0, 1, 2, 3, 4] %}
-          {% set Ret_val_tomorrow =  rain_tom_2 %}
-          {% else %}
-          {% set Ret_val_tomorrow =  rain_tom_1 %}
-          {% endif %}
-          {{ (Ret_val_tomorrow) }}
 
-  ##ONLY FOR V1
-  #### Levels of temerature
-  #### 15C is temperature to start irrigation - defined in automations as conditions
-  #### before 21C - one per 72 days = 6 (Morning & Evening = 2)
-  #### above 21C below 25C - one per 48 hours = 4
-  #### above 25C below 30C - one per 24 hours = 2
-  #### above 30C - one per 12 hours = 1
-  - platform: template
-    sensors:
-      irrigation_unlimited_counter:
-        unit_of_measurement: "mm"
-        value_template: >
-          {% set temp_max =states('sensor.irrigation_unlimited_temp_max_today') | float(-2) %}
-          {% if temp_max <19 %}
-          {% set IUC_val = 6  | int %}
-          {% elif temp_max >19 and temp_max <23 %}
-          {% set IUC_val = 4  | int %}
-          {% elif temp_max >23 and temp_max <28 %}
-          {% set IUC_val = 2  | int %}
-          {% elif temp_max >28 %}
-          {% set IUC_val = 1  | int %}
-          {% endif %}
-          {{ (IUC_val) }}
 
-  ### levels of rain
-  ### today - 10 mm - irrigation is off / adjusted
-  ### yesterday and tomorrow  - 20 mm - irrigation is off/ adjusted
-  ### less than 20% - do not irrigate
-  ### temp less than 15 - do not irrigate
-  - platform: template
-    sensors:
-      irrigation_unlimited_rain_ajastment:
-        unit_of_measurement: "%"
-        value_template: >
-          {% set rain_y = float(states('sensor.irrigation_unlimited_rain_yesterday_24'), 0) /10 %}
-          {% set rain_n = float(states('sensor.irrigation_unlimited_rain_today'), 0) /7 %}
-          {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /8 %}
-          {% set temp_max =states('sensor.irrigation_unlimited_temp_max_today') | float(-2) %}
-          {% if temp_max < 15 %}
-          {% set temp_adj = 0  | float %}
-          {% elif temp_max >=15 and temp_max <19 %}
-          {% set temp_adj =  2/4 | float  %}
-          {% elif temp_max >=19 and temp_max <23 %}
-          {% set temp_adj =  2/3 | float  %}
-          {% elif temp_max >=23 and temp_max <28 %}
-          {% set temp_adj =  1 | float  %}
-          {% elif temp_max >=28 %}
-          {% set temp_adj =  1 | float  %}
-          {% endif %}
-          {% set rain_adj = float((1 - (rain_y+rain_n+rain_t))*temp_adj, 0)*100 %}
-          {% if rain_adj < 0 %}
-          {% set rain_adj = 0  | int %}
-          {% endif %}
-          {% if rain_adj < 22 %}
-          {% set rain_adj = 0  | int %}
-          {% endif %}
-          {{int(rain_adj,0)}}
 
-  - platform: template
-    sensors:
-      irrigation_unlimited_rain_ajastment_drop:
-        unit_of_measurement: "%"
-        value_template: >
-          {% set rain_y = float(states('sensor.irrigation_unlimited_rain_yesterday_24'), 0) /10 %}
-          {% set rain_n = float(states('sensor.irrigation_unlimited_rain_today'), 0) /7 %}
-          {% set rain_t = float(states('sensor.irrigation_unlimited_rain_tomorrow'), 0) /8 %}
-          {% set temp_max =states('sensor.irrigation_unlimited_temp_max_today') | float(-2) %}
-          {% if temp_max < 15 %}
-          {% set temp_adj = 0  | float %}
-          {% elif temp_max >=15 and temp_max <21 %}
-          {% set temp_adj =  2/4 | float  %}
-          {% elif temp_max >=21 and temp_max <25 %}
-          {% set temp_adj =  2/3 | float  %}
-          {% elif temp_max >=25 and temp_max <30 %}
-          {% set temp_adj =  1 | float  %}
-          {% elif temp_max >=30 %}
-          {% set temp_adj =  1 | float  %}
-          {% endif %}
-          {% set rain_adj = float((1 - (rain_y+rain_n+rain_t)), 0)*100 %}
-          {% if rain_adj < 0 %}
-          {% set rain_adj = 0  | int %}
-          {% endif %}
-          {% if rain_adj < 15 %}
-          {% set rain_adj = 0  | int %}
-          {% endif %}
-          {{int(rain_adj,0)}}
