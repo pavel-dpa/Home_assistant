@@ -83,19 +83,19 @@
       data:
         type: daily
       target:
-        entity_id: weather.home
+        entity_id: weather.forecast_home
       response_variable: daily
   sensor:
     - name: "today_day_temp"
-      state: "{{ daily['weather.home'].forecast[0].temperature|float(default=0) }}"
+      state: "{{ daily['weather.forecast_home'].forecast[0].temperature|float(default=0) }}"
     - name: "next_day_temp"
-      state: "{{ daily['weather.home'].forecast[1].temperature|float(default=0) }}"        
+      state: "{{ daily['weather.forecast_home'].forecast[1].temperature|float(default=0) }}"        
     - name: "today_day_precipitation"
-      state: "{{ daily['weather.home'].forecast[0].precipitation|float(default=0) }}"
+      state: "{{ daily['weather.forecast_home'].forecast[0].precipitation|float(default=0) }}"
     - name: "next_day_precipitation"
-      state: "{{ daily['weather.home'].forecast[1].precipitation|float(default=0) }}"        
+      state: "{{ daily['weather.forecast_home'].forecast[1].precipitation|float(default=0) }}"        
     - name: "next_plus2_day_precipitation"
-      state: "{{ daily['weather.home'].forecast[2].precipitation|float(default=0) }}"    
+      state: "{{ daily['weather.forecast_home'].forecast[2].precipitation|float(default=0) }}"    
 
 
 - sensor:
@@ -166,7 +166,7 @@
   - unit_of_measurement: '%'
     default_entity_id: sensor.irrigation_unlimited_rain_ajastment_drop
     state: '{% set rain_y = float(states(''sensor.irrigation_unlimited_rain_yesterday_24''),
-      0) /10 %} {% set rain_n = float(states(''sensor.irrigation_unlimited_rain_today''),
+      0) %} {% set rain_n = float(states(''sensor.irrigation_unlimited_rain_today''),
       0) /7 %} {% set rain_t = float(states(''sensor.irrigation_unlimited_rain_tomorrow''),
       0) /8 %} {% set temp_max =states(''sensor.irrigation_unlimited_temp_max_today'')
       | float(-2) %} {% if temp_max < 15 %} {% set temp_adj = 0  | float %} {% elif
@@ -175,6 +175,7 @@
       temp_max >=25 and temp_max <30 %} {% set temp_adj =  1 | float  %} {% elif temp_max
       >=30 %} {% set temp_adj =  1 | float  %} {% endif %} {% set rain_adj = float((1
       - (rain_y+rain_n+rain_t)), 0)*100 %} {% if rain_adj < 0 %} {% set rain_adj =
+      0  | int %} {% endif %} {% if temp_adj == 0 %} {% set rain_adj =
       0  | int %} {% endif %} {% if rain_adj < 15 %} {% set rain_adj = 0  | int %}
       {% endif %} {{int(rain_adj,0)}}'
     name: irrigation_unlimited_rain_ajastment_drop
